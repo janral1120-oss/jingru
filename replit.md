@@ -25,3 +25,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+
+## Artifacts
+
+- `artifacts/portfolio` — Single-page interactive personal portfolio for 王静茹 (Jingru Wang). Vintage-meets-modern aesthetic (deep coffee + amber + grain texture). All editable content lives in `src/lib/portfolioData.ts`. Sections: Hero, Career Journey (drag timeline), Skill Map (interactive radial graph), Featured Projects (STAR modals).

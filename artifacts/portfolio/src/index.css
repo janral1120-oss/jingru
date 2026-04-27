@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+
+  --opaque-button-border-intensity: -8;
+
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+
+  /* Deep coffee brown (#1a1410) -> HSL 23 24% 8% */
+  --background: 23 24% 8%;
+  
+  /* Warm off-white (#f5f0e8) -> HSL 36 33% 93% */
+  --foreground: 36 33% 93%;
+
+  --border: 23 24% 16%;
+  --card: 23 24% 11%;
+  --card-foreground: 36 33% 93%;
+  --card-border: 23 24% 16%;
+
+  --popover: 23 24% 11%;
+  --popover-foreground: 36 33% 93%;
+  --popover-border: 23 24% 16%;
+
+  /* Amber-orange (#e6a157) -> HSL 31 75% 62% */
+  --primary: 31 75% 62%;
+  --primary-foreground: 23 24% 8%;
+
+  /* Soft cool blue (#5f9ea0) -> HSL 182 32% 50% */
+  --secondary: 182 32% 50%;
+  --secondary-foreground: 36 33% 93%;
+
+  --muted: 23 24% 16%;
+  --muted-foreground: 36 20% 70%;
+
+  --accent: 31 75% 62%;
+  --accent-foreground: 23 24% 8%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --input: 23 24% 20%;
+  --ring: 31 75% 62%;
+
+  --app-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  --app-font-serif: 'Playfair Display', serif;
+  --app-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  --radius: 0.5rem;
+
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-primary-border: hsl(from hsl(var(--primary)) h s calc(l - 10));
+  --sidebar-accent-border: hsl(from hsl(var(--accent)) h s calc(l - 10));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l - 10));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l - 10));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l - 10));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l - 10));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l - 10));
+}
+
+.dark {
+  --background: 23 24% 8%;
+  --foreground: 36 33% 93%;
+  --border: 23 24% 16%;
+  --card: 23 24% 11%;
+  --card-foreground: 36 33% 93%;
+  --card-border: 23 24% 16%;
+  --popover: 23 24% 11%;
+  --popover-foreground: 36 33% 93%;
+  --popover-border: 23 24% 16%;
+  --primary: 31 75% 62%;
+  --primary-foreground: 23 24% 8%;
+  --secondary: 182 32% 50%;
+  --secondary-foreground: 36 33% 93%;
+  --muted: 23 24% 16%;
+  --muted-foreground: 36 20% 70%;
+  --accent: 31 75% 62%;
+  --accent-foreground: 23 24% 8%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 23 24% 20%;
+  --ring: 31 75% 62%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+  }
+}
+
+.interactive-glow {
+  transition: all 0.3s ease-out;
+}
+
+.interactive-glow:hover {
+  box-shadow: 0 0 20px 2px rgba(230, 161, 87, 0.15);
+  border-color: rgba(230, 161, 87, 0.4);
+}
+
+.timeline-scroll-area::-webkit-scrollbar {
+  height: 6px;
+}
+.timeline-scroll-area::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+.timeline-scroll-area::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+.timeline-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}

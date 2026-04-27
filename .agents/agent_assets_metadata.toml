@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "4DdtVeFCURZx2l2LNbTJL"
+uri = "file://artifacts/portfolio/public/portrait.png"
+type = "image"
+title = "Minimalist editorial portrait"
