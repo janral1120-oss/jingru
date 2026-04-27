@@ -7,12 +7,10 @@ function ProjectCard({
   project,
   index,
   onOpen,
-  variant,
 }: {
   project: ProjectCase;
   index: number;
   onOpen: () => void;
-  variant: 'square' | 'wide';
 }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
@@ -25,8 +23,6 @@ function ProjectCard({
 
   const reset = () => setTilt({ x: 0, y: 0 });
 
-  const isWide = variant === 'wide';
-
   return (
     <motion.article
       initial={{ opacity: 0, y: 36 }}
@@ -36,20 +32,14 @@ function ProjectCard({
       onMouseMove={onMouseMove}
       onMouseLeave={reset}
       onClick={onOpen}
-      className={`group relative cursor-pointer rounded-2xl overflow-hidden border border-border/70 bg-card transition-all duration-500 hover:border-primary/60 hover:shadow-[0_25px_80px_-20px_rgba(230,161,87,0.35)] ${
-        isWide ? 'md:col-span-2 md:flex md:flex-row md:min-h-[360px]' : 'flex flex-col'
-      }`}
+      className="group relative cursor-pointer rounded-2xl overflow-hidden border border-border/70 bg-card transition-all duration-500 hover:border-primary/60 hover:shadow-[0_25px_80px_-20px_rgba(230,161,87,0.35)] flex flex-col"
       style={{
         transform: `perspective(1200px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: 'transform 250ms ease-out, border-color 400ms, box-shadow 600ms',
       }}
     >
       {/* image area */}
-      <div
-        className={`relative overflow-hidden ${
-          isWide ? 'md:w-[58%] aspect-[4/3] md:aspect-auto' : 'aspect-[5/3]'
-        }`}
-      >
+      <div className="relative overflow-hidden aspect-[5/3]">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.6s] ease-out group-hover:scale-[1.08]"
           style={{ backgroundImage: `url(${project.image})` }}
@@ -96,7 +86,7 @@ function ProjectCard({
       </div>
 
       {/* content area */}
-      <div className={`relative p-6 md:p-8 flex flex-col ${isWide ? 'md:w-[42%]' : 'flex-1'}`}>
+      <div className="relative p-6 md:p-8 flex flex-col flex-1">
         <h3 className="font-serif text-xl md:text-[26px] leading-tight text-foreground group-hover:text-primary transition-colors duration-500 tracking-tight">
           {project.title}
         </h3>
@@ -140,7 +130,7 @@ export function FeaturedProjects() {
             </p>
           </div>
           <div className="hidden md:block font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground/70">
-            Five Cases · 2023 — 2026
+            Six Cases · 2023 — 2026
           </div>
         </motion.div>
 
@@ -151,7 +141,6 @@ export function FeaturedProjects() {
               project={project}
               index={index}
               onOpen={() => setSelectedProject(project)}
-              variant={index === featuredProjects.length - 1 ? 'wide' : 'square'}
             />
           ))}
         </div>
@@ -204,9 +193,25 @@ export function FeaturedProjects() {
                 <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4 leading-tight tracking-tight">
                   {selectedProject.title}
                 </h2>
-                <p className="text-secondary font-medium pb-6 border-b border-border/50 text-sm md:text-base leading-relaxed">
-                  {selectedProject.role}
-                </p>
+
+                <div className="pb-6 border-b border-border/50 space-y-4">
+                  <div>
+                    <p className="text-[10px] tracking-[0.22em] text-muted-foreground/70 font-mono uppercase mb-1.5">
+                      Project Brief · 项目介绍
+                    </p>
+                    <p className="text-foreground/90 text-sm md:text-base leading-relaxed">
+                      {selectedProject.intro}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] tracking-[0.22em] text-muted-foreground/70 font-mono uppercase mb-1.5">
+                      My Role · 核心定位
+                    </p>
+                    <p className="text-secondary font-medium text-sm md:text-base leading-relaxed">
+                      {selectedProject.role}
+                    </p>
+                  </div>
+                </div>
 
                 <div className="mt-6 mb-8 p-5 rounded-xl bg-primary/5 border border-primary/20">
                   <p className="text-[10px] tracking-[0.22em] text-primary/80 font-mono uppercase mb-2">

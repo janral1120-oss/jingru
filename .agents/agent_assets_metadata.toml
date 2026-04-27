@@ -48,3 +48,9 @@ id = "gp8qviyRtMNOd_QX5ItDo"
 uri = "file://artifacts/portfolio/src/assets/project-15cities.png"
 type = "image"
 title = "fifteen cities tour map"
+
+[[generated]]
+id = "FPnB8LVU1qMpl0aZLhTKE"
+uri = "file://artifacts/portfolio/src/assets/project-livestream.png"
+type = "image"
+title = "concert livestream control"

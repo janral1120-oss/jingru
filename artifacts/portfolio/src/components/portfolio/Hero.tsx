@@ -49,8 +49,8 @@ export function Hero() {
             >
               <h2 className="text-xl md:text-2xl font-serif text-muted-foreground mb-2">王静茹 (Jingru Wang)</h2>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-foreground leading-tight">
-                品牌营销 & <br />
-                <span className="text-primary interactive-glow transition-all duration-300">AI智能体架构师</span>
+                体验产品 · 整合营销 <br />
+                <span className="text-primary interactive-glow transition-all duration-300">项目统筹</span>
               </h1>
             </motion.div>
 
@@ -60,10 +60,10 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl leading-relaxed"
             >
-              3年+品牌营销与活动策划 <span className="mx-2 text-primary/50">|</span> 
-              从0到1孵化IP <span className="mx-2 text-primary/50">|</span> 
-              AI内容提效40% <span className="mx-2 text-primary/50">|</span> 
-              跨界资源整合
+              3年+整合营销与项目统筹 <span className="mx-2 text-primary/50">|</span>
+              从0到1孵化IP <span className="mx-2 text-primary/50">|</span>
+              跨地域标准化运营 <span className="mx-2 text-primary/50">|</span>
+              AI提效40%
             </motion.p>
 
             <motion.div 

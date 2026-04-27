@@ -2,6 +2,7 @@ import { CursorGlow } from "@/components/portfolio/CursorGlow";
 import { BackgroundNoise } from "@/components/portfolio/BackgroundNoise";
 import { Hero } from "@/components/portfolio/Hero";
 import { CareerJourney } from "@/components/portfolio/CareerJourney";
+import { Manifesto } from "@/components/portfolio/Manifesto";
 import { SkillMap } from "@/components/portfolio/SkillMap";
 import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
 
@@ -18,7 +19,9 @@ export default function Home() {
         <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-12 opacity-50" />
         
         <CareerJourney />
-        
+
+        <Manifesto />
+
         <SkillMap />
         
         <FeaturedProjects />

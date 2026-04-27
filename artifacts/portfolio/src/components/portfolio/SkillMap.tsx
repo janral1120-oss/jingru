@@ -10,22 +10,43 @@ type LabelNode = {
   detail?: string;
   pos: Pt;
   kind: 'center' | 'hub' | 'leaf';
+  isCore?: boolean;
 };
 
 type LineSpec = { from: Pt; to: Pt; key: string; seed: number };
 
-const VW = 1200;
-const VH = 780;
+const VW = 1300;
+const VH = 880;
 
-const HUB_ANGLES = [
-  -Math.PI * 0.78,
-  -Math.PI * 0.22,
-  Math.PI * 0.22,
-  Math.PI * 0.78,
-];
+type ClusterLayout = {
+  hubAngle: number;
+  hubR: number;
+  childMode: 'fanFromCenter' | 'fanFromHub' | 'custom';
+  childR: number;
+  childSpread: number;
+  /** custom offsets from hub, index-aligned with cluster.children */
+  customOffsets?: Pt[];
+};
 
-const HUB_RADIUS = 270;
-const CHILD_BASE_RADIUS = 440;
+const CLUSTER_LAYOUT: Record<string, ClusterLayout> = {
+  'core-management': {
+    hubAngle: -Math.PI / 2,
+    hubR: 200,
+    childMode: 'custom',
+    childR: 0,
+    childSpread: 0,
+    customOffsets: [
+      { x: -235, y: -50 },  // 项目全周期管理
+      { x: -135, y: -170 }, // 跨部门资源整合
+      { x:  135, y: -170 }, // 标准化体系搭建
+      { x:  235, y: -50 },  // 影响力传播与申报
+    ],
+  },
+  'ai-tools':        { hubAngle: -Math.PI * 0.86, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.55 },
+  'marketing':       { hubAngle: -Math.PI * 0.14, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.5 },
+  'sop':             { hubAngle:  Math.PI * 0.14, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.5 },
+  'data':            { hubAngle:  Math.PI * 0.86, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.5 },
+};
 
 function seededRandom(seed: number) {
   let s = seed;
@@ -42,29 +63,46 @@ function buildLayout(clusters: typeof skillClusters) {
   const lines: LineSpec[] = [];
 
   clusters.forEach((cluster, ci) => {
-    const baseAngle = HUB_ANGLES[ci];
+    const layout = CLUSTER_LAYOUT[cluster.id];
+    if (!layout) return;
+
     const hubPos = {
-      x: Math.cos(baseAngle) * HUB_RADIUS,
-      y: Math.sin(baseAngle) * HUB_RADIUS,
+      x: Math.cos(layout.hubAngle) * layout.hubR,
+      y: Math.sin(layout.hubAngle) * layout.hubR,
     };
     labels.push({
       id: cluster.id,
       label: cluster.label,
       pos: hubPos,
       kind: 'hub',
+      isCore: cluster.isCore,
     });
     lines.push({ from: { x: 0, y: 0 }, to: hubPos, key: `hub-${cluster.id}`, seed: 7 + ci * 13 });
 
     const n = cluster.children.length;
-    const totalSpread = 0.55 + Math.max(0, n - 3) * 0.12;
     cluster.children.forEach((child, ki) => {
       const t = n === 1 ? 0 : ki / (n - 1) - 0.5;
-      const childAngle = baseAngle + t * totalSpread;
-      const childR = CHILD_BASE_RADIUS + (ki % 2 === 0 ? -28 : 24) + ((ki * 11) % 17);
-      const childPos = {
-        x: Math.cos(childAngle) * childR,
-        y: Math.sin(childAngle) * childR,
-      };
+
+      let childPos: Pt;
+      let from: Pt = hubPos;
+      if (layout.childMode === 'custom' && layout.customOffsets && layout.customOffsets[ki]) {
+        const off = layout.customOffsets[ki];
+        childPos = { x: hubPos.x + off.x, y: hubPos.y + off.y };
+      } else if (layout.childMode === 'fanFromHub') {
+        const childAngle = layout.hubAngle + t * layout.childSpread;
+        childPos = {
+          x: hubPos.x + Math.cos(childAngle) * layout.childR,
+          y: hubPos.y + Math.sin(childAngle) * layout.childR,
+        };
+      } else {
+        const childAngle = layout.hubAngle + t * layout.childSpread;
+        const radial = layout.childR + (ki % 2 === 0 ? -22 : 22) + ((ki * 11) % 17);
+        childPos = {
+          x: Math.cos(childAngle) * radial,
+          y: Math.sin(childAngle) * radial,
+        };
+      }
+
       labels.push({
         id: child.id,
         label: child.label,
@@ -73,7 +111,7 @@ function buildLayout(clusters: typeof skillClusters) {
         kind: 'leaf',
       });
       lines.push({
-        from: hubPos,
+        from,
         to: childPos,
         key: `${cluster.id}-${child.id}`,
         seed: ci * 100 + ki * 7 + 3,
@@ -99,7 +137,7 @@ function buildCurve(from: Pt, to: Pt, seed: number) {
   const path = `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
 
   const particles: { x: number; y: number; r: number; o: number }[] = [];
-  const count = Math.max(8, Math.round(dist / 14));
+  const count = Math.max(6, Math.round(dist / 14));
   for (let i = 1; i < count; i++) {
     const t = i / count;
     const mt = 1 - t;
@@ -127,14 +165,14 @@ export function SkillMap() {
 
   const ambientParticles = useMemo(() => {
     const rand = seededRandom(317);
-    return Array.from({ length: 90 }).map(() => {
+    return Array.from({ length: 110 }).map(() => {
       const angle = rand() * Math.PI * 2;
-      const r = 60 + rand() * (VW / 2 - 80);
+      const r = 70 + rand() * (VW / 2 - 90);
       return {
         x: Math.cos(angle) * r,
         y: Math.sin(angle) * r * 0.85,
         r: 0.35 + rand() * 1.1,
-        o: 0.12 + rand() * 0.35,
+        o: 0.1 + rand() * 0.32,
       };
     });
   }, []);
@@ -184,7 +222,7 @@ export function SkillMap() {
             能力图谱 <span className="text-primary">Skill Map</span>
           </h2>
           <p className="mt-3 text-sm text-muted-foreground/80 tracking-wide">
-            星河发散的不规则粒子线条 — 越靠近光标，能力越发亮。
+            管理力为内核 · 四大能力集群发散 — 越靠近光标，能力越发亮。
           </p>
         </motion.div>
 
@@ -208,9 +246,13 @@ export function SkillMap() {
                 <stop offset="0%" stopColor="rgba(230,161,87,0.35)" />
                 <stop offset="100%" stopColor="rgba(230,161,87,0)" />
               </radialGradient>
+              <radialGradient id="sm-core-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(230,161,87,0.55)" />
+                <stop offset="100%" stopColor="rgba(230,161,87,0)" />
+              </radialGradient>
             </defs>
 
-            <circle cx="0" cy="0" r="220" fill="url(#sm-center-glow)" />
+            <circle cx="0" cy="0" r="240" fill="url(#sm-center-glow)" />
 
             {ambientParticles.map((p, i) => (
               <circle
@@ -252,9 +294,9 @@ export function SkillMap() {
                   key={`hub-glow-${l.id}`}
                   cx={l.pos.x}
                   cy={l.pos.y}
-                  r={l.kind === 'hub' ? 60 : 28}
-                  fill="url(#sm-hub-glow)"
-                  opacity={l.kind === 'hub' ? 0.9 : 0.5}
+                  r={l.kind === 'hub' ? (l.isCore ? 80 : 60) : 28}
+                  fill={l.isCore ? 'url(#sm-core-glow)' : 'url(#sm-hub-glow)'}
+                  opacity={l.kind === 'hub' ? (l.isCore ? 1 : 0.85) : 0.5}
                 />
               ))}
           </svg>
@@ -279,6 +321,7 @@ export function SkillMap() {
 
             const isCenter = label.kind === 'center';
             const isHub = label.kind === 'hub';
+            const isCoreHub = isHub && label.isCore;
 
             return (
               <div
@@ -301,6 +344,13 @@ export function SkillMap() {
                       王静茹
                     </div>
                   </div>
+                ) : isCoreHub ? (
+                  <div className="relative">
+                    <div className="absolute inset-0 -mx-4 -my-2 rounded-full bg-background/70 backdrop-blur-md border border-primary/60 shadow-[0_0_30px_rgba(230,161,87,0.35)]" />
+                    <div className="relative font-serif font-bold text-lg md:text-2xl text-primary tracking-[0.18em] px-5 py-2">
+                      {label.label}
+                    </div>
+                  </div>
                 ) : isHub ? (
                   <div className="relative">
                     <div className="absolute inset-0 -mx-3 -my-1.5 rounded-full bg-background/55 backdrop-blur-sm" />
@@ -310,7 +360,7 @@ export function SkillMap() {
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="absolute inset-0 -mx-2 -my-1 rounded-md bg-background/40 backdrop-blur-[2px]" />
+                    <div className="absolute inset-0 -mx-2 -my-1 rounded-md bg-background/45 backdrop-blur-[2px]" />
                     <div className="relative px-2.5 py-1">
                       <div className="text-xs md:text-sm font-medium text-foreground/90 tracking-wide">
                         {label.label}
