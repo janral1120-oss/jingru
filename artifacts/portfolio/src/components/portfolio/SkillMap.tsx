@@ -1,112 +1,329 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { skillClusters } from '@/lib/portfolioData';
 
+type Pt = { x: number; y: number };
+
+type LabelNode = {
+  id: string;
+  label: string;
+  detail?: string;
+  pos: Pt;
+  kind: 'center' | 'hub' | 'leaf';
+};
+
+type LineSpec = { from: Pt; to: Pt; key: string; seed: number };
+
+const VW = 1200;
+const VH = 780;
+
+const HUB_ANGLES = [
+  -Math.PI * 0.78,
+  -Math.PI * 0.22,
+  Math.PI * 0.22,
+  Math.PI * 0.78,
+];
+
+const HUB_RADIUS = 270;
+const CHILD_BASE_RADIUS = 440;
+
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+}
+
+function buildLayout(clusters: typeof skillClusters) {
+  const labels: LabelNode[] = [
+    { id: 'center', label: '王静茹', pos: { x: 0, y: 0 }, kind: 'center' },
+  ];
+  const lines: LineSpec[] = [];
+
+  clusters.forEach((cluster, ci) => {
+    const baseAngle = HUB_ANGLES[ci];
+    const hubPos = {
+      x: Math.cos(baseAngle) * HUB_RADIUS,
+      y: Math.sin(baseAngle) * HUB_RADIUS,
+    };
+    labels.push({
+      id: cluster.id,
+      label: cluster.label,
+      pos: hubPos,
+      kind: 'hub',
+    });
+    lines.push({ from: { x: 0, y: 0 }, to: hubPos, key: `hub-${cluster.id}`, seed: 7 + ci * 13 });
+
+    const n = cluster.children.length;
+    const totalSpread = 0.55 + Math.max(0, n - 3) * 0.12;
+    cluster.children.forEach((child, ki) => {
+      const t = n === 1 ? 0 : ki / (n - 1) - 0.5;
+      const childAngle = baseAngle + t * totalSpread;
+      const childR = CHILD_BASE_RADIUS + (ki % 2 === 0 ? -28 : 24) + ((ki * 11) % 17);
+      const childPos = {
+        x: Math.cos(childAngle) * childR,
+        y: Math.sin(childAngle) * childR,
+      };
+      labels.push({
+        id: child.id,
+        label: child.label,
+        detail: child.detail,
+        pos: childPos,
+        kind: 'leaf',
+      });
+      lines.push({
+        from: hubPos,
+        to: childPos,
+        key: `${cluster.id}-${child.id}`,
+        seed: ci * 100 + ki * 7 + 3,
+      });
+    });
+  });
+
+  return { labels, lines };
+}
+
+function buildCurve(from: Pt, to: Pt, seed: number) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+  const rand = seededRandom(seed);
+
+  const px = -dy / dist;
+  const py = dx / dist;
+  const offset = (rand() - 0.5) * dist * 0.32;
+  const cx = (from.x + to.x) / 2 + px * offset;
+  const cy = (from.y + to.y) / 2 + py * offset;
+
+  const path = `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+
+  const particles: { x: number; y: number; r: number; o: number }[] = [];
+  const count = Math.max(8, Math.round(dist / 14));
+  for (let i = 1; i < count; i++) {
+    const t = i / count;
+    const mt = 1 - t;
+    const x = mt * mt * from.x + 2 * mt * t * cx + t * t * to.x;
+    const y = mt * mt * from.y + 2 * mt * t * cy + t * t * to.y;
+    const jitter = 5 + rand() * 4;
+    const jx = (rand() - 0.5) * jitter;
+    const jy = (rand() - 0.5) * jitter;
+    const r = 0.5 + rand() * 1.6;
+    const o = 0.35 + rand() * 0.55;
+    particles.push({ x: x + jx, y: y + jy, r, o });
+  }
+  return { path, particles };
+}
+
 export function SkillMap() {
-  const [activeCluster, setActiveCluster] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
+
+  const { labels, lines } = useMemo(() => buildLayout(skillClusters), []);
+  const curves = useMemo(
+    () => lines.map((l) => ({ ...l, ...buildCurve(l.from, l.to, l.seed) })),
+    [lines],
+  );
+
+  const ambientParticles = useMemo(() => {
+    const rand = seededRandom(317);
+    return Array.from({ length: 90 }).map(() => {
+      const angle = rand() * Math.PI * 2;
+      const r = 60 + rand() * (VW / 2 - 80);
+      return {
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r * 0.85,
+        r: 0.35 + rand() * 1.1,
+        o: 0.12 + rand() * 0.35,
+      };
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let raf = 0;
+    let pending: { x: number; y: number } | null = null;
+
+    const onMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      const xRatio = (e.clientX - rect.left) / rect.width;
+      const yRatio = (e.clientY - rect.top) / rect.height;
+      pending = {
+        x: (xRatio - 0.5) * VW,
+        y: (yRatio - 0.5) * VH,
+      };
+      if (!raf) {
+        raf = requestAnimationFrame(() => {
+          if (pending) setMouse(pending);
+          raf = 0;
+        });
+      }
+    };
+    const onLeave = () => setMouse(null);
+
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerleave', onLeave);
+    return () => {
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
     <section className="py-24 bg-card/30 relative overflow-hidden" id="skills">
       <div className="container mx-auto px-6">
-        <motion.h2 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="text-3xl md:text-4xl font-serif font-bold text-foreground text-center mb-16"
+          viewport={{ once: true, margin: '-100px' }}
+          className="text-center mb-12"
         >
-          能力图谱 <span className="text-primary">Skill Map</span>
-        </motion.h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
+            能力图谱 <span className="text-primary">Skill Map</span>
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground/80 tracking-wide">
+            星河发散的不规则粒子线条 — 越靠近光标，能力越发亮。
+          </p>
+        </motion.div>
 
-        <div 
+        <div
           ref={containerRef}
-          className="relative w-full max-w-5xl mx-auto h-[600px] md:h-[700px] flex items-center justify-center"
+          className="relative w-full max-w-6xl mx-auto"
+          style={{ aspectRatio: `${VW} / ${VH}` }}
         >
-          
-          {/* Center Node */}
-          <motion.div 
-            className="absolute z-20 w-28 h-28 md:w-32 md:h-32 rounded-full bg-background border border-primary flex items-center justify-center shadow-[0_0_30px_rgba(230,161,87,0.2)] cursor-grab active:cursor-grabbing"
-            drag
-            dragConstraints={containerRef}
-            dragElastic={0.1}
-            whileHover={{ scale: 1.05 }}
-            animate={{ 
-              boxShadow: ['0 0 20px rgba(230,161,87,0.2)', '0 0 40px rgba(230,161,87,0.4)', '0 0 20px rgba(230,161,87,0.2)']
-            }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          <svg
+            viewBox={`${-VW / 2} ${-VH / 2} ${VW} ${VH}`}
+            className="absolute inset-0 w-full h-full"
+            preserveAspectRatio="xMidYMid meet"
           >
-            <span className="font-serif font-bold text-foreground text-xl">王静茹</span>
-          </motion.div>
+            <defs>
+              <radialGradient id="sm-center-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(230,161,87,0.55)" />
+                <stop offset="40%" stopColor="rgba(230,161,87,0.18)" />
+                <stop offset="100%" stopColor="rgba(230,161,87,0)" />
+              </radialGradient>
+              <radialGradient id="sm-hub-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(230,161,87,0.35)" />
+                <stop offset="100%" stopColor="rgba(230,161,87,0)" />
+              </radialGradient>
+            </defs>
 
-          {/* Radial Layout */}
-          {skillClusters.map((cluster, index) => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-            const radius = isMobile ? 140 : 250; // Distance from center
-            
-            // Adjust angles for better distribution depending on screen size
-            const angleOffset = isMobile ? -Math.PI / 2 : -Math.PI / 2; // start from top
-            const angle = angleOffset + (index * (360 / skillClusters.length)) * (Math.PI / 180);
-            
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-            
-            const isActive = activeCluster === cluster.id;
+            <circle cx="0" cy="0" r="220" fill="url(#sm-center-glow)" />
+
+            {ambientParticles.map((p, i) => (
+              <circle
+                key={`amb-${i}`}
+                cx={p.x}
+                cy={p.y}
+                r={p.r}
+                fill="rgba(230,161,87,1)"
+                opacity={p.o}
+              />
+            ))}
+
+            {curves.map((c) => (
+              <g key={c.key}>
+                <path
+                  d={c.path}
+                  fill="none"
+                  stroke="rgba(230,161,87,0.16)"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                />
+                {c.particles.map((p, i) => (
+                  <circle
+                    key={i}
+                    cx={p.x}
+                    cy={p.y}
+                    r={p.r}
+                    fill="rgba(245,240,232,1)"
+                    opacity={p.o}
+                  />
+                ))}
+              </g>
+            ))}
+
+            {labels
+              .filter((l) => l.kind !== 'center')
+              .map((l) => (
+                <circle
+                  key={`hub-glow-${l.id}`}
+                  cx={l.pos.x}
+                  cy={l.pos.y}
+                  r={l.kind === 'hub' ? 60 : 28}
+                  fill="url(#sm-hub-glow)"
+                  opacity={l.kind === 'hub' ? 0.9 : 0.5}
+                />
+              ))}
+          </svg>
+
+          {labels.map((label) => {
+            const xPct = 50 + (label.pos.x / VW) * 100;
+            const yPct = 50 + (label.pos.y / VH) * 100;
+
+            let scale = 1;
+            let glow = 0;
+            if (mouse) {
+              const dx = label.pos.x - mouse.x;
+              const dy = label.pos.y - mouse.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              const reach = label.kind === 'leaf' ? 170 : 230;
+              if (dist < reach) {
+                const t = 1 - dist / reach;
+                scale = 1 + t * (label.kind === 'leaf' ? 0.22 : 0.18);
+                glow = t;
+              }
+            }
+
+            const isCenter = label.kind === 'center';
+            const isHub = label.kind === 'hub';
 
             return (
-              <motion.div
-                key={cluster.id}
-                className="absolute z-10"
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                style={{ x, y }}
+              <div
+                key={label.id}
+                className={`absolute pointer-events-none whitespace-nowrap text-center ${
+                  isCenter ? 'z-30' : isHub ? 'z-20' : 'z-10'
+                }`}
+                style={{
+                  left: `${xPct}%`,
+                  top: `${yPct}%`,
+                  transform: `translate(-50%, -50%) scale(${scale})`,
+                  transition: 'transform 220ms cubic-bezier(0.22,1,0.36,1), filter 220ms ease-out',
+                  filter: `drop-shadow(0 0 ${4 + glow * 16}px rgba(230,161,87,${0.25 + glow * 0.55}))`,
+                }}
               >
-                {/* Connecting Line (visual only, attached to initial pos) */}
-                <svg className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0" style={{ transform: `translate(-50%, -50%) rotate(${angle}rad)` }}>
-                  <line x1="300" y1="300" x2="300" y2={300 - radius + 30} stroke="hsl(var(--border))" strokeWidth="1.5" strokeDasharray="4 4" />
-                </svg>
-
-                <motion.div 
-                  className="relative group cursor-grab active:cursor-grabbing"
-                  onMouseEnter={() => setActiveCluster(cluster.id)}
-                  onMouseLeave={() => setActiveCluster(null)}
-                  onClick={() => setActiveCluster(isActive ? null : cluster.id)}
-                  drag
-                  dragConstraints={{ top: -50, bottom: 50, left: -50, right: 50 }}
-                  dragElastic={0.2}
-                >
-                  <motion.div 
-                    className={`px-5 py-3 rounded-full border backdrop-blur-md whitespace-nowrap transition-all duration-300 shadow-lg ${
-                      isActive ? 'bg-primary/20 border-primary text-primary shadow-primary/20' : 'bg-card border-border text-foreground hover:border-primary/50 shadow-black/10'
-                    }`}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <span className="font-semibold text-sm md:text-base">{cluster.label}</span>
-                  </motion.div>
-
-                  {/* Children popup */}
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 md:w-72 bg-card border border-primary/30 rounded-xl p-5 shadow-2xl z-30 pointer-events-none"
-                      >
-                        <ul className="space-y-4">
-                          {cluster.children.map(child => (
-                            <li key={child.id} className="text-sm border-b border-border/50 last:border-0 pb-2 last:pb-0">
-                              <span className="text-foreground font-semibold block">{child.label}</span>
-                              {child.detail && <span className="text-muted-foreground text-xs block mt-1">{child.detail}</span>}
-                            </li>
-                          ))}
-                        </ul>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </motion.div>
+                {isCenter ? (
+                  <div className="relative">
+                    <div className="absolute inset-0 -m-6 rounded-full bg-background/70 backdrop-blur-md border border-primary/40 shadow-[0_0_60px_rgba(230,161,87,0.25)]" />
+                    <div className="relative font-serif font-bold text-2xl md:text-3xl text-foreground tracking-[0.18em] px-7 py-4">
+                      王静茹
+                    </div>
+                  </div>
+                ) : isHub ? (
+                  <div className="relative">
+                    <div className="absolute inset-0 -mx-3 -my-1.5 rounded-full bg-background/55 backdrop-blur-sm" />
+                    <div className="relative font-serif font-semibold text-base md:text-xl text-primary tracking-wider px-4 py-1.5">
+                      {label.label}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="absolute inset-0 -mx-2 -my-1 rounded-md bg-background/40 backdrop-blur-[2px]" />
+                    <div className="relative px-2.5 py-1">
+                      <div className="text-xs md:text-sm font-medium text-foreground/90 tracking-wide">
+                        {label.label}
+                      </div>
+                      {label.detail && (
+                        <div className="text-[10px] md:text-[11px] text-secondary/85 mt-0.5 tracking-wider font-mono">
+                          {label.detail}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

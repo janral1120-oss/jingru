@@ -28,4 +28,4 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 
 ## Artifacts
 
-- `artifacts/portfolio` — Single-page interactive personal portfolio for 王静茹 (Jingru Wang). Vintage-meets-modern aesthetic (deep coffee + amber + grain texture). All editable content lives in `src/lib/portfolioData.ts`. Sections: Hero, Career Journey (drag timeline), Skill Map (interactive radial graph), Featured Projects (STAR modals).
+- `artifacts/portfolio` — Single-page interactive personal portfolio for 王静茹 (Jingru Wang). Vintage-meets-modern aesthetic (deep coffee + amber + grain texture). All editable content lives in `src/lib/portfolioData.ts`. Sections: Hero, Career Journey (2-card image grid with timeline dots), Skill Map (radial particle network with cursor-proximity scaling), Featured Projects (2-per-row magazine grid with STAR modals; 5th case spans full width). Section images live in `src/assets/`.

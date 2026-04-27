@@ -1,116 +1,103 @@
-import { useRef, useState, MouseEvent } from 'react';
 import { motion } from 'framer-motion';
 import { careerJourney } from '@/lib/portfolioData';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function CareerJourney() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e: MouseEvent) => {
-    setIsDragging(true);
-    if (!containerRef.current) return;
-    setStartX(e.pageX - containerRef.current.offsetLeft);
-    setScrollLeft(containerRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging || !containerRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll fast
-    containerRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const scrollBy = (amount: number) => {
-    if (containerRef.current) {
-      containerRef.current.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-  };
-
   return (
     <section className="py-24 relative overflow-hidden" id="career">
-      <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
-        <motion.h2 
+      <div className="container mx-auto px-6">
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="text-3xl md:text-4xl font-serif font-bold text-foreground"
+          viewport={{ once: true, margin: '-100px' }}
+          className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4"
         >
           职业脉络 <span className="text-primary">Career Journey</span>
         </motion.h2>
-        
-        <div className="hidden md:flex gap-4">
-          <button 
-            onClick={() => scrollBy(-400)}
-            className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-colors text-muted-foreground hover:text-primary"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button 
-            onClick={() => scrollBy(400)}
-            className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-colors text-muted-foreground hover:text-primary"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="relative w-full">
-        {/* Timeline Line */}
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-border -translate-y-1/2 hidden md:block z-0" />
-        
-        <div 
-          ref={containerRef}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          className={`flex overflow-x-auto gap-6 px-6 md:px-[calc((100vw-min(100vw,1536px))/2+1.5rem)] pb-12 pt-6 snap-x snap-mandatory timeline-scroll-area relative z-10 ${isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
-          style={{ scrollbarWidth: 'none' }}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ delay: 0.1 }}
+          className="text-muted-foreground mb-14 max-w-xl"
         >
-          {careerJourney.map((node, index) => (
-            <motion.div
-              key={node.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`snap-center flex-shrink-0 w-[85vw] md:w-[450px] bg-card border ${node.isAchievement ? 'border-primary/50 shadow-[0_0_15px_rgba(230,161,87,0.1)]' : 'border-border'} rounded-xl p-8 hover:border-primary/50 transition-colors duration-300 group interactive-glow relative`}
-            >
-              {/* Node dot on timeline */}
-              <div className="hidden md:block absolute top-1/2 -left-[15px] -translate-y-1/2 w-4 h-4 rounded-full bg-background border-2 border-primary z-20 group-hover:scale-125 transition-transform" />
+          两段履历，一条线索 — 在现场打磨节奏感，在 AI 工具里加倍杠杆。
+        </motion.p>
 
-              <div className="flex flex-col h-full pointer-events-none">
-                <div className="mb-6">
-                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider mb-4">
-                    {node.period}
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground font-serif">{node.company}</h3>
-                  <h4 className="text-md text-secondary font-medium mt-2">{node.role}</h4>
+        <div className="relative">
+          {/* timeline line — desktop horizontal */}
+          <div className="hidden md:block absolute top-[180px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-0" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 relative z-10">
+            {careerJourney.map((node, index) => (
+              <motion.article
+                key={node.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.7, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative"
+              >
+                {/* image frame */}
+                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 bg-card">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.4s] ease-out group-hover:scale-[1.06]"
+                    style={{ backgroundImage: `url(${node.image})` }}
+                  />
+                  {/* warm vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/20 to-transparent" />
+                  {/* grain overlay */}
+                  <div
+                    className="absolute inset-0 opacity-[0.18] mix-blend-overlay pointer-events-none"
+                    style={{
+                      backgroundImage:
+                        'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"160\\" height=\\"160\\"><filter id=\\"n\\"><feTurbulence type=\\"fractalNoise\\" baseFrequency=\\"0.85\\" numOctaves=\\"2\\"/></filter><rect width=\\"100%\\" height=\\"100%\\" filter=\\"url(%23n)\\" opacity=\\"0.7\\"/></svg>")',
+                    }}
+                  />
+                  {/* period badge */}
+                  <div className="absolute top-5 left-5 z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md border border-primary/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    <span className="text-[11px] tracking-[0.18em] uppercase text-primary font-mono font-semibold">
+                      {node.period}
+                    </span>
+                  </div>
+                  {/* caption */}
+                  <div className="absolute bottom-5 left-5 right-5 z-10 text-foreground/90 text-xs md:text-sm font-light tracking-wide italic font-serif">
+                    {node.caption}
+                  </div>
+                  {/* timeline dot for desktop */}
+                  <div className="hidden md:block absolute -bottom-[10px] left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary shadow-[0_0_18px_rgba(230,161,87,0.7)] z-20" />
                 </div>
-                
-                <ul className="mt-4 space-y-4 flex-1">
-                  {node.highlights.map((highlight, idx) => (
-                    <li key={idx} className="flex items-start text-sm md:text-base text-muted-foreground group-hover:text-foreground/90 transition-colors">
-                      <span className="mr-3 mt-2 w-1.5 h-1.5 rounded-full bg-primary/50 flex-shrink-0" />
-                      <span className="leading-relaxed">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* content */}
+                <div className="pt-10 md:pt-12">
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-foreground tracking-tight">
+                    {node.company}
+                  </h3>
+                  <h4 className="mt-2 text-secondary text-sm md:text-base font-medium tracking-wide">
+                    {node.role}
+                  </h4>
+
+                  <ul className="mt-6 space-y-4">
+                    {node.highlights.map((highlight, idx) => (
+                      <motion.li
+                        key={idx}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + idx * 0.08 }}
+                        className="flex items-start gap-3 text-sm md:text-[15px] leading-relaxed text-muted-foreground group/item"
+                      >
+                        <span className="mt-2 w-6 h-px bg-primary/50 flex-shrink-0 group-hover/item:bg-primary group-hover/item:w-8 transition-all duration-300" />
+                        <span className="group-hover/item:text-foreground/95 transition-colors">
+                          {highlight}
+                        </span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

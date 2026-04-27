@@ -6,3 +6,45 @@ id = "4DdtVeFCURZx2l2LNbTJL"
 uri = "file://artifacts/portfolio/public/portrait.png"
 type = "image"
 title = "Minimalist editorial portrait"
+
+[[generated]]
+id = "fzvH0-CuPQPC87QfdNz0r"
+uri = "file://artifacts/portfolio/src/assets/career-yuelehui.png"
+type = "image"
+title = "yuelehui concert hall"
+
+[[generated]]
+id = "Q_ao1aT_Qh1bq16yZMCWP"
+uri = "file://artifacts/portfolio/src/assets/career-aranya.png"
+type = "image"
+title = "aranya hotel atrium"
+
+[[generated]]
+id = "kU1vQN_laMva7ymQVV0AI"
+uri = "file://artifacts/portfolio/src/assets/project-carmen.png"
+type = "image"
+title = "carmen flamenco stage"
+
+[[generated]]
+id = "nEOR148HyjDCfglkZaDXZ"
+uri = "file://artifacts/portfolio/src/assets/project-tea-agent.png"
+type = "image"
+title = "tea tasting agent"
+
+[[generated]]
+id = "RuaiUDHTZlHp_oQpX4rYY"
+uri = "file://artifacts/portfolio/src/assets/project-gallery-opening.png"
+type = "image"
+title = "art gallery opening"
+
+[[generated]]
+id = "ClbIKlinTov_DOikQ6GJH"
+uri = "file://artifacts/portfolio/src/assets/project-mountain-tea.png"
+type = "image"
+title = "mountain tea ceremony"
+
+[[generated]]
+id = "gp8qviyRtMNOd_QX5ItDo"
+uri = "file://artifacts/portfolio/src/assets/project-15cities.png"
+type = "image"
+title = "fifteen cities tour map"
