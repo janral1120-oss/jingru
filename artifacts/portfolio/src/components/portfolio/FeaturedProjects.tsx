@@ -130,7 +130,7 @@ export function FeaturedProjects() {
             </p>
           </div>
           <div className="hidden md:block font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground/70">
-            Six Cases · 2023 — 2026
+            Seven Cases · 2023 — 2026
           </div>
         </motion.div>
 

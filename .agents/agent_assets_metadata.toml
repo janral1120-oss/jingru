@@ -54,3 +54,9 @@ id = "FPnB8LVU1qMpl0aZLhTKE"
 uri = "file://artifacts/portfolio/src/assets/project-livestream.png"
 type = "image"
 title = "concert livestream control"
+
+[[generated]]
+id = "zLVMNvPV3XVhUgCPYBNH5"
+uri = "file://artifacts/portfolio/src/assets/project-wukesong.png"
+type = "image"
+title = "Wukesong orchestra press conference"

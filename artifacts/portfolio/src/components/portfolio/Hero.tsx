@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Mail, MessageCircle, Link as LinkIcon, Smartphone } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
+import { heroSubTagline } from '@/lib/portfolioData';
 
 export function Hero() {
   const { toast } = useToast();
@@ -65,6 +66,18 @@ export function Hero() {
               跨地域标准化运营 <span className="mx-2 text-primary/50">|</span>
               AI提效40%
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              className="flex items-center justify-center md:justify-start gap-3"
+            >
+              <span className="hidden md:inline-block w-8 h-px bg-primary/60" />
+              <p className="text-[13px] md:text-sm font-mono tracking-[0.18em] text-primary/85">
+                {heroSubTagline}
+              </p>
+            </motion.div>
 
             <motion.div 
               initial={{ opacity: 0, y: 20 }}

@@ -42,6 +42,30 @@ const CLUSTER_LAYOUT: Record<string, ClusterLayout> = {
       { x:  235, y: -50 },  // 影响力传播与申报
     ],
   },
+  'user-insight': {
+    hubAngle: Math.PI / 2,
+    hubR: 200,
+    childMode: 'custom',
+    childR: 0,
+    childSpread: 0,
+    customOffsets: [
+      { x: -180, y:  60 },  // 双账号运营
+      { x:    0, y: 140 },  // 用户评论分析
+      { x:  180, y:  60 },  // 情绪捕捉
+    ],
+  },
+  'ai-learning': {
+    hubAngle: Math.PI,
+    hubR: 320,
+    childMode: 'custom',
+    childR: 0,
+    childSpread: 0,
+    customOffsets: [
+      { x:  -55, y: -115 }, // 自主搭建智能体
+      { x: -135, y:    0 }, // AIGC 工具迭代
+      { x:  -55, y:  115 }, // 跨领域整合
+    ],
+  },
   'ai-tools':        { hubAngle: -Math.PI * 0.86, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.55 },
   'marketing':       { hubAngle: -Math.PI * 0.14, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.5 },
   'sop':             { hubAngle:  Math.PI * 0.14, hubR: 320, childMode: 'fanFromCenter', childR: 480, childSpread: 0.5 },
@@ -58,7 +82,7 @@ function seededRandom(seed: number) {
 
 function buildLayout(clusters: typeof skillClusters) {
   const labels: LabelNode[] = [
-    { id: 'center', label: '王静茹', pos: { x: 0, y: 0 }, kind: 'center' },
+    { id: 'center', label: 'Skill Map', pos: { x: 0, y: 0 }, kind: 'center' },
   ];
   const lines: LineSpec[] = [];
 
@@ -222,7 +246,7 @@ export function SkillMap() {
             能力图谱 <span className="text-primary">Skill Map</span>
           </h2>
           <p className="mt-3 text-sm text-muted-foreground/80 tracking-wide">
-            管理力为内核 · 四大能力集群发散 — 越靠近光标，能力越发亮。
+            管理力 · 用户洞察 双核驱动 · 五大能力集群环绕 — 越靠近光标，能力越发亮。
           </p>
         </motion.div>
 
@@ -340,8 +364,8 @@ export function SkillMap() {
                 {isCenter ? (
                   <div className="relative">
                     <div className="absolute inset-0 -m-6 rounded-full bg-background/70 backdrop-blur-md border border-primary/40 shadow-[0_0_60px_rgba(230,161,87,0.25)]" />
-                    <div className="relative font-serif font-bold text-2xl md:text-3xl text-foreground tracking-[0.18em] px-7 py-4">
-                      王静茹
+                    <div className="relative font-serif italic font-bold text-2xl md:text-3xl text-primary tracking-[0.22em] px-8 py-4">
+                      {label.label}
                     </div>
                   </div>
                 ) : isCoreHub ? (

@@ -3,9 +3,17 @@ import careerAranya from "@/assets/career-aranya.png";
 import projectCarmen from "@/assets/project-carmen.png";
 import projectTeaAgent from "@/assets/project-tea-agent.png";
 import projectGallery from "@/assets/project-gallery-opening.png";
+import projectWukesong from "@/assets/project-wukesong.png";
 import project15Cities from "@/assets/project-15cities.png";
 import projectLivestream from "@/assets/project-livestream.png";
 import projectMountainTea from "@/assets/project-mountain-tea.png";
+
+export type CoreSector = {
+  id: string;
+  title: string;
+  caption: string;
+  metric: string;
+};
 
 export type CareerNode = {
   id: string;
@@ -40,6 +48,65 @@ export type ProjectCase = {
   };
 };
 
+export type SocialOpsBlock = {
+  id: string;
+  category: string;
+  account?: string;
+  description: string;
+  tags?: string[];
+  stats?: { label: string; value: string }[];
+  screenshotSlots: number;
+  screenshots?: string[]; // when filled, replaces the placeholders
+};
+
+export type Testimonial = {
+  id: string;
+  imageUrl?: string;
+  caption?: string;
+};
+
+export const heroSubTagline =
+  "从千人级演出到高端酒旅，贯穿大型文化活动全链路操盘";
+
+export const coreSectors: CoreSector[] = [
+  {
+    id: "sector-stage",
+    title: "大型文化演艺操盘",
+    caption: "500 人级以上剧场 / Livehouse 开业及常态化商业演出",
+    metric: "500+ 席",
+  },
+  {
+    id: "sector-travel",
+    title: "文旅在地体验标准化",
+    caption: "三亚 · 北戴河 · 金山岭 · 莫村 四大目的地非标活动 SOP",
+    metric: "4 大目的地",
+  },
+  {
+    id: "sector-brand",
+    title: "品牌商业全案",
+    caption: "0 → 1 品牌孵化与百万级 GMV 转化",
+    metric: "百万 GMV",
+  },
+  {
+    id: "sector-ai",
+    title: "AI 落地能力",
+    caption: "搭建智能体，团队提效 40%",
+    metric: "提效 40%",
+  },
+  {
+    id: "sector-insight",
+    title: "用户洞察",
+    caption: "双账号运营，单篇 20w+ 阅读爆款案例",
+    metric: "20w+ 阅读",
+  },
+  {
+    id: "sector-resource",
+    title: "资源整合",
+    caption: "跨部门 · 跨地域 · 跨行业协同",
+    metric: "3 跨协同",
+  },
+];
+
 export const careerJourney: CareerNode[] = [
   {
     id: "career-1",
@@ -65,7 +132,8 @@ export const careerJourney: CareerNode[] = [
     highlights: [
       "建立多门店活动内容 SOP 及标准化物料清单，推动跨地域协同与进度追踪，使筹备效率提升 30%",
       "引入 AI 工具重构内容生产流程，将创意产出周期缩短 40%，并制定团队使用规范",
-      "主导设计『私人定制旅行 Agent』产品方案，探索 AI 在文旅场景的落地应用"
+      "主导设计『私人定制旅行 Agent』产品方案，探索 AI 在文旅场景的落地应用",
+      "建立活动数据埋点与复盘机制 · 整合在地资源形成在地资源矩阵 · 极端天气应急预案与流程优化"
     ]
   }
 ];
@@ -83,6 +151,16 @@ export const skillClusters: SkillCluster[] = [
     ]
   },
   {
+    id: "user-insight",
+    label: "用户洞察",
+    isCore: true,
+    children: [
+      { id: "ui-1", label: "双账号运营", detail: "工作号 + 个人号" },
+      { id: "ui-2", label: "用户评论分析", detail: "数据驱动选题" },
+      { id: "ui-3", label: "情绪捕捉", detail: "共情内容创作" }
+    ]
+  },
+  {
     id: "ai-tools",
     label: "AI 营销工具",
     children: [
@@ -90,6 +168,15 @@ export const skillClusters: SkillCluster[] = [
       { id: "ai-2", label: "ChatGPT & DeepSeek", detail: "文案脚本" },
       { id: "ai-3", label: "AI 考试 Agent", detail: "评茶员题库" },
       { id: "ai-4", label: "旅行 Agent 设计", detail: "AI + 文旅" }
+    ]
+  },
+  {
+    id: "ai-learning",
+    label: "AI 学习能力",
+    children: [
+      { id: "al-1", label: "自主搭建智能体", detail: "0 代码 Agent" },
+      { id: "al-2", label: "AIGC 工具迭代", detail: "持续追踪与替换" },
+      { id: "al-3", label: "跨领域整合", detail: "营销 / 文旅 / 培训" }
     ]
   },
   {
@@ -153,18 +240,33 @@ export const featuredProjects: ProjectCase[] = [
     }
   },
   {
-    id: "case-3",
-    title: "发布会操盘 · 新艺术空间开业全案",
-    tags: ["发布会策划", "品牌落地", "跨部门协同"],
-    keyData: "开业客流超预期 150% | 媒体 30+ 家",
-    intro: "新演出艺术空间需在 1 个月内完成开业并建立\u201C城市艺术会客厅\u201D的品牌认知。",
-    role: "开业项目负责人。统筹策划、设计、媒体、工程、运营等多模块。",
+    id: "case-3a",
+    title: "发布会操盘 · 北京常营爱乐汇艺术空间开业",
+    tags: ["发布会策划", "空间联动", "创意冷餐会"],
+    keyData: "三层场馆接连演出 | 音乐厅 · 剧场 · Livehouse 三业态融合 | 流动式发布会",
+    intro: "北京常营新建综合艺术空间集音乐厅、剧场、Livehouse 三种业态于一体，需以差异化开幕活动打通空间界限。",
+    role: "开业项目负责人。统筹三层差异化场馆的活动动线、节目编排与多业态资源调度。",
     image: projectGallery,
     star: {
-      s: "公司在不同城市开设 2 个新艺术空间，需在 1 个月内完成开业并建立\u201C城市艺术会客厅\u201D的品牌认知。",
-      t: "策划并执行高影响力的开业庆典及季首系列活动，实现客流与声量双目标。",
-      a: "① 品牌定义：提出 slogan\u201C让艺术走向大众\u201D，设计全套 VI 延展（邀请函、导视系统、周边）。② 发布会流程设计：媒体签到 → 艺术导览 → 主理人演讲 → 嘉宾对谈 → 自由酒会，穿插小型室内乐演奏和沉浸式光影秀。③ 媒体与达人邀约：邀请本地艺术圈 KOL、20+ 生活方式媒体、10+ 主流新闻媒体，提前寄送手写定制邀请函。④ 开业季系列活动：策划连续 4 周的\u201C开幕主题周\u201D（音乐周、亲子周、市集周、会员周），每周末举办付费工作坊和免费快闪活动。⑤ 现场执行：制定详细执行手册（动线、安保、防疫、应急预案），并进行 2 次全流程彩排。",
-      r: "开业当天客流超预期 150%，媒体报道 30+ 篇，社交媒体话题阅读量 50 万+；开业季系列活动售出 80% 门票，会员转化率 25%；成功塑造\u201C城市艺术会客厅\u201D品牌形象，为后续空间复制提供标准模板。"
+      s: "2023 年 10 月，北京常营爱乐汇艺术空间落成，集音乐厅、剧场、Livehouse 三种业态于一体；常规剪彩式开幕难以让媒体与观众感知\u201C三重空间\u201D的差异与联动价值。",
+      t: "策划一场打破场馆界限的\u201C流动式\u201D开业发布会，把三层 200 人级场馆贯通为同一条体验动线，让观众在演出中走完整个空间。",
+      a: "① 业态拆解：把音乐厅、剧场、Livehouse 三业态分别匹配古典三重奏、当代戏剧片段、现场乐队三种节目；制定接连演出节奏卡，每场 20 分钟。② 动线设计：以创意冷餐会为枢纽，把饮品、菜单、灯光与下一场演出主题强绑定；设计三层流动指引与媒体导览路线。③ 多线统筹：协调演员、舞美、灯光、音响、安保、餐饮、媒体接待 7 条线并行，制定全流程总控表。",
+      r: "三个 200 人级场馆全部满座；现场打通\u201C看演出 + 走空间 + 喝酒 + 谈合作\u201D的复合体验；发布会本身成为常营空间对外传播的内容素材，被多家文化媒体报道；建立\u201C多业态空间发布会\u201D操盘模板。"
+    }
+  },
+  {
+    id: "case-3b",
+    title: "发布会操盘 · 北京五棵松爱乐汇艺术空间开业",
+    tags: ["官方发布会", "媒体统筹", "交响乐团演出"],
+    keyData: "2 个 500 人场馆 | 30+ 媒体 | 交响乐团现场",
+    intro: "2024 年 5 月北京五棵松新空间需借助官方发布会建立高端品牌势能，撬动主流媒体声量并联动商场客流。",
+    role: "开业项目负责人。统筹官方发布会议程、交响乐团演出、媒体邀约与商场曝光。",
+    image: projectWukesong,
+    star: {
+      s: "2024 年 5 月，五棵松新爱乐汇艺术空间（2 个 500 人场馆）需要建立\u201C高端文化空间\u201D的主流媒体心智，并借助商圈位置撬动家庭与商务客群。",
+      t: "策划一场具有国家级质感的官方发布会，配合现场交响乐团演出与媒体矩阵，实现\u201C官方背书 + 艺术势能 + 商场曝光\u201D三位一体。",
+      a: "① 仪式编排：设计交响乐团暖场 + 官方致辞 + 主理人演讲 + 嘉宾对谈的发布会议程；制定主舞台灯光、音效、摄录全套技术方案。② 媒体统筹：定向邀约 30+ 主流媒体，提前 2 周发出深度采访提纲与一对一专访排期；现场设置媒体专访间。③ 商场联动：与商场协同设计户外水牌、室内引流动线及限时艺术装置，让发布会延伸成为周末客流活动。④ 全流程总控：从签到、安保、动线、后台、应急到媒体撤场分时段调度，确保高密度议程零失误。",
+      r: "发布会顺利落地，2 个 500 人场馆全程坐满；30+ 媒体集中报道，包括主流文化与城市生活类媒体；交响乐团演出片段成为传播素材，建立五棵松空间的高端品牌心智，为后续档期奠定客户与媒体基础。"
     }
   },
   {
@@ -216,3 +318,51 @@ export const featuredProjects: ProjectCase[] = [
 
 export const manifesto =
   "不仅追求单点爆款，更擅长搭建体系、统筹资源、赋能团队，实现从 0 到 1、从 1 到 N 的规模化增长。";
+
+export const socialOps: SocialOpsBlock[] = [
+  {
+    id: "social-1",
+    category: "小红书达人矩阵",
+    account: "B 端思维 · 资源池",
+    description:
+      "拥有 100+ 达人资源库，建立标准化合作 SOP，从对接、内容审核、数据回收到结算全链路打通，赋能品牌规模化种草。",
+    tags: ["达人资源库", "合作 SOP", "品牌种草", "数据回收"],
+    stats: [
+      { label: "达人资源", value: "100+" },
+      { label: "合作 SOP", value: "全链路" },
+      { label: "曝光级别", value: "百万级" },
+    ],
+    screenshotSlots: 0,
+  },
+  {
+    id: "social-2",
+    category: "工作号 · 爆款内容策展",
+    account: "@Lululune",
+    description:
+      "深度参与卡门、jjapa & friends 等项目的爆款内容策划与推动，用专业账号承接品牌内容首发、二次剪辑分发与社群引流。",
+    tags: ["爆款策划", "首发阵地", "二次分发", "社群引流"],
+    screenshotSlots: 4,
+  },
+  {
+    id: "social-3",
+    category: "个人号 · 共情内容创作者",
+    account: "@Lune 漫游手册",
+    description:
+      "以真实用户视角创作，善于捕捉情绪共鸣。曾为\u201C林町春私房面包\u201D连续发布多篇笔记，借小红书自然流量获得 3.1w 点赞、800w+ 浏览量；发现爆款趋势后迅速发布攻略与 Q&A，有效带动账号粉丝增长。",
+    tags: ["真实视角", "情绪共鸣", "自然流量", "攻略 / Q&A"],
+    stats: [
+      { label: "单篇点赞", value: "3.1w" },
+      { label: "浏览量", value: "800w+" },
+    ],
+    screenshotSlots: 4,
+  },
+];
+
+export const testimonials: Testimonial[] = [
+  { id: "t-1", caption: "客户好评 · 截图占位 01" },
+  { id: "t-2", caption: "客户好评 · 截图占位 02" },
+  { id: "t-3", caption: "客户好评 · 截图占位 03" },
+  { id: "t-4", caption: "客户好评 · 截图占位 04" },
+  { id: "t-5", caption: "客户好评 · 截图占位 05" },
+  { id: "t-6", caption: "客户好评 · 截图占位 06" },
+];
