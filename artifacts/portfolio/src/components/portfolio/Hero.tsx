@@ -3,6 +3,7 @@ import { Mail, MessageCircle, Link as LinkIcon, Smartphone } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { heroSubTagline } from '@/lib/portfolioData';
+import { ParticleSphere } from '@/components/portfolio/ParticleSphere';
 
 export function Hero() {
   const { toast } = useToast();
@@ -25,6 +26,10 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[90vh] flex flex-col justify-center pt-20 pb-12 overflow-hidden">
+      {/* 3D particle sphere — sits in background, tracks mouse */}
+      <ParticleSphere className="z-0" />
+      {/* Soft radial gradient so sphere blends into the dark bg */}
+      <div className="absolute inset-0 pointer-events-none z-[1] bg-[radial-gradient(ellipse_60%_80%_at_28%_50%,transparent_35%,rgba(12,10,7,0.55)_80%)]" />
       <div className="container mx-auto px-6 z-10">
         <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-24">
           

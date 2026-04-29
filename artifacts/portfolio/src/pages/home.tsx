@@ -9,12 +9,16 @@ import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
 import { SocialOps } from "@/components/portfolio/SocialOps";
 import { Testimonials } from "@/components/portfolio/Testimonials";
 import { Contact } from "@/components/portfolio/Contact";
+import { CareerAmbience } from "@/components/portfolio/CareerAmbience";
+import { JourneyIndicator } from "@/components/portfolio/JourneyIndicator";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary">
       <BackgroundNoise />
       <CursorGlow />
+      <CareerAmbience />
+      <JourneyIndicator />
 
       <div className="relative z-10 flex flex-col max-w-[1920px] mx-auto">
         <Hero />
