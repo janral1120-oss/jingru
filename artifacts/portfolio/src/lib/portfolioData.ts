@@ -1,12 +1,20 @@
 import careerYuelehui from "@/assets/career-yuelehui.png";
-import careerAranya from "@/assets/career-aranya.png";
+import careerAranya from "@assets/（二）海南阿那亚商业运营有限公司北京分公司经历照片替换_1777460267810.jpg";
 import projectCarmen from "@/assets/project-carmen.png";
 import projectTeaAgent from "@/assets/project-tea-agent.png";
-import projectGallery from "@/assets/project-gallery-opening.png";
-import projectWukesong from "@/assets/project-wukesong.png";
-import project15Cities from "@/assets/project-15cities.png";
+import projectGallery from "@assets/（三）新空间开业操盘_·_业态矩阵进化佐证：五棵松乐团照片-适当插入_1777460275829.JPG";
+import projectWukesong from "@assets/（三）新空间开业操盘_·_业态矩阵进化佐证：五棵松爱乐汇开业发布截图1_1777460275829.jpg";
+import projectChangying from "@assets/（三）新空间开业操盘_·_业态矩阵进化佐证：常营爱乐汇开业发布_1777460275826.jpg";
+import project15Cities from "@assets/（六）规模化运营_·_全国_15_城巡演标准化复制截图1_1777460296248.jpg";
+import project15CitiesDetail from "@assets/（六）15城巡演截图2_1777460296248.jpg";
 import projectLivestream from "@/assets/project-livestream.png";
-import projectMountainTea from "@/assets/project-mountain-tea.png";
+import projectLivestreamDetail from "@assets/（五）演出直播佐证内容（不需要替换大图，可以插入在细节里）_1777460283636.JPG";
+import projectMountainTea from "@assets/（四）活动策划_·_在地文化体验产品化图片替换1_1777460283632.JPG";
+import projectMountainTea2 from "@assets/（四）活动策划_·_在地文化体验产品化图片替换2_1777460283635.jpg";
+import lune1 from "@assets/lune漫游手册数据1_1777460316166.jpg";
+import lune2 from "@assets/lune漫游手册数据2_1777460316167.jpg";
+import lune3 from "@assets/lune漫游手册数据3_1777460316167.jpg";
+import heroPortrait from "@assets/（一）首页-个人照片_1777460260879.jpg";
 
 export type CoreSector = {
   id: string;
@@ -51,6 +59,7 @@ export type ProjectCase = {
   intro: string;
   role: string;
   image: string;
+  detailImages?: string[];
   isCombined?: boolean;
   battles?: ProjectBattle[];
   star: { s: string; t: string; a: string; r: string };
@@ -72,6 +81,8 @@ export type Testimonial = {
   imageUrl?: string;
   caption?: string;
 };
+
+export { heroPortrait };
 
 export const heroSubTagline =
   "从千人级演出到高端酒旅，贯穿大型文化活动全链路操盘";
@@ -269,7 +280,7 @@ export const featuredProjects: ProjectCase[] = [
         tags: ["发布会策划", "空间联动", "创意冷餐会"],
         keyData:
           "3 个差异化场馆（音乐厅 · 剧场 · Livehouse）| 音乐演出植入 | 三层接连演出",
-        image: projectGallery,
+        image: projectChangying,
         star: {
           s: "2023 年 10 月，北京常营爱乐汇艺术空间落成，集音乐厅、剧场、Livehouse 三种业态于一体；常规剪彩式开幕难以让媒体与观众感知「三重空间」的差异与联动价值。",
           t: "策划一场打破场馆界限的「流动式」开业发布会，把三层 200 人级场馆贯通为同一条体验动线，让观众在演出中走完整个空间。",
@@ -307,6 +318,7 @@ export const featuredProjects: ProjectCase[] = [
       "单一成功演出模型需快速复制到全国，但各地团队能力参差、市场环境差异大。",
     role: "全国项目统筹。负责将单一成功的演出模型产品化并推向全国。",
     image: project15Cities,
+    detailImages: [project15CitiesDetail],
     star: {
       s: "一款音乐会产品在本地验证成功后，公司希望快速复制到全国 15 个城市，但各地团队能力参差、市场环境差异大。",
       t: "输出可复制的标准化工具包，建立高效的中央-地方协同机制，确保各地执行质量稳定。",
@@ -323,6 +335,7 @@ export const featuredProjects: ProjectCase[] = [
       "公司希望将线下演出通过直播规模化，提升影响力并争取国家级认可，需要从 0 搭建可复制的直播体系。",
     role: "演出直播项目统筹。负责直播 SOP、技术标准、内容脚本、媒体对接、申报与数据复盘。",
     image: projectLivestream,
+    detailImages: [projectLivestreamDetail],
     star: {
       s: "线下演出受时间地域限制，影响力天花板明显；公司希望通过直播实现规模化扩散，并争取国家级背书与传播资源。",
       t: "从 0 到 1 搭建演出直播全流程体系，沉淀技术与内容 SOP，争取国家基金补贴及主流媒体转播。",
@@ -339,6 +352,7 @@ export const featuredProjects: ProjectCase[] = [
       "阿那亚酒管希望根据品牌定位打造差异化的酒店体验，但各地门店标准不一，需建立可标准化、可本地化微调的活动产品体系。",
     role: "活动主管 / 产品化运营。负责从 0 到 1 设计并落地酒店在地文化体验活动体系。",
     image: projectMountainTea,
+    detailImages: [projectMountainTea2],
     star: {
       s: "阿那亚酒店希望打造差异化的「山居风物诗」体验，但各地门店活动标准不一，执行质量参差不齐，缺乏可复用的方法。",
       t: "建立一套可标准化、可本地化微调的活动产品体系，提升体验一致性与筹备效率，并显著缩短新人上手时间。",
@@ -386,7 +400,8 @@ export const socialOps: SocialOpsBlock[] = [
       { label: "单篇点赞", value: "3.1w" },
       { label: "浏览量", value: "800w+" },
     ],
-    screenshotSlots: 4,
+    screenshotSlots: 3,
+    screenshots: [lune1, lune2, lune3],
   },
 ];
 

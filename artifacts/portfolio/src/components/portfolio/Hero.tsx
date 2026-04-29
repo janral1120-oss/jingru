@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Mail, MessageCircle, Link as LinkIcon, Smartphone } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { heroSubTagline } from '@/lib/portfolioData';
+import { heroSubTagline, heroPortrait } from '@/lib/portfolioData';
 import { ParticleSphere } from '@/components/portfolio/ParticleSphere';
 
 export function Hero() {
@@ -41,9 +41,9 @@ export function Hero() {
           >
             <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl scale-110" />
             <img 
-              src="/portrait.png" 
+              src={heroPortrait} 
               alt="王静茹 (Jingru Wang)" 
-              className="relative w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border border-primary/20 shadow-2xl"
+              className="relative w-64 h-64 md:w-80 md:h-80 object-cover object-top rounded-full border border-primary/20 shadow-2xl"
             />
           </motion.div>
 
