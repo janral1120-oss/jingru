@@ -1,39 +1,55 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ImageIcon, Hash } from 'lucide-react';
+import { Hash } from 'lucide-react';
 import { socialOps, SocialOpsBlock } from '@/lib/portfolioData';
 
-function ScreenshotPlaceholders({ block }: { block: SocialOpsBlock }) {
-  if (block.screenshotSlots <= 0) return null;
-  const slots = Array.from({ length: block.screenshotSlots });
+function AccordionGallery({ block }: { block: SocialOpsBlock }) {
+  const [active, setActive] = useState<number | null>(null);
+  const images = block.screenshots ?? [];
+  if (images.length === 0) return null;
+
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {slots.map((_, idx) => {
-        const realImage = block.screenshots?.[idx];
-        return (
+    <div className="w-full">
+      <div
+        className="flex gap-1.5 overflow-hidden rounded-xl"
+        style={{ height: '280px' }}
+        onMouseLeave={() => setActive(null)}
+      >
+        {images.map((src, i) => (
           <div
-            key={idx}
-            className="group/slot relative aspect-[3/4] rounded-xl overflow-hidden border border-dashed border-border/70 bg-background/50 hover:border-primary/60 transition-colors"
+            key={i}
+            onMouseEnter={() => setActive(i)}
+            className="relative overflow-hidden rounded-lg cursor-pointer flex-shrink-0 border border-border/50 hover:border-primary/60 transition-colors"
+            style={{
+              flex: active === i ? '4 1 0%' : '1 1 0%',
+              transition: 'flex 0.5s cubic-bezier(0.22,1,0.36,1)',
+              minWidth: '28px',
+            }}
           >
-            {realImage ? (
-              <img
-                src={realImage}
-                alt={`${block.account ?? block.category} screenshot ${idx + 1}`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-3 text-center">
-                <ImageIcon className="w-5 h-5 text-primary/60" />
-                <p className="text-[10px] tracking-[0.18em] text-muted-foreground/70 font-mono uppercase">
-                  Slot {String(idx + 1).padStart(2, '0')}
-                </p>
-                <p className="text-[11px] text-muted-foreground/60 leading-tight">
-                  此处插入爆款数据截图
-                </p>
+            <img
+              src={src}
+              alt={`${block.account ?? block.category} ${i + 1}`}
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+            {/* hover overlay */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent transition-opacity duration-300"
+              style={{ opacity: active === i ? 1 : 0 }}
+            />
+            {/* collapsed strip number */}
+            {active !== i && (
+              <div className="absolute inset-0 flex items-end justify-center pb-2">
+                <span className="font-mono text-[9px] tracking-widest text-primary/60 rotate-90 select-none">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
               </div>
             )}
           </div>
-        );
-      })}
+        ))}
+      </div>
+      <p className="mt-2 text-[9px] tracking-[0.22em] text-muted-foreground/50 font-mono uppercase text-right">
+        {images.length} screenshots · hover to expand
+      </p>
     </div>
   );
 }
@@ -102,10 +118,10 @@ function Block({ block, index }: { block: SocialOpsBlock; index: number }) {
           )}
         </div>
 
-        {/* right: stats and / or screenshots */}
+        {/* right: stats and / or accordion gallery */}
         <div className="flex flex-col gap-5">
           {block.stats && block.stats.length > 0 && <StatsBlock block={block} />}
-          {hasScreenshots && <ScreenshotPlaceholders block={block} />}
+          {hasScreenshots && <AccordionGallery block={block} />}
           {!hasScreenshots && (!block.stats || block.stats.length === 0) && (
             <div className="rounded-xl border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground/70">
               暂无附件

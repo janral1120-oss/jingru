@@ -323,10 +323,7 @@ function NormalModal({ project }: { project: ProjectCase }) {
         <StarBlock star={project.star} />
 
         {project.detailImages && project.detailImages.length > 0 && (
-          <div className="mt-10 pt-8 border-t border-border/50">
-            <p className="text-[10px] tracking-[0.32em] text-primary/80 font-mono uppercase mb-4">
-              项目佐证 · Evidence
-            </p>
+          <div className="mt-10 pt-8 border-t border-border/40">
             <div className={`grid gap-4 ${project.detailImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
               {project.detailImages.map((src, i) => (
                 <img

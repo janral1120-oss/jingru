@@ -37,14 +37,75 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex-shrink-0"
+            className="relative flex-shrink-0 w-64 h-64 md:w-80 md:h-80"
           >
-            <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl scale-110" />
-            <img 
-              src={heroPortrait} 
-              alt="王静茹 (Jingru Wang)" 
-              className="relative w-64 h-64 md:w-80 md:h-80 object-cover object-top rounded-full border border-primary/20 shadow-2xl"
+            {/* Deep amber glow */}
+            <div className="absolute inset-[-12%] rounded-full bg-primary/15 blur-3xl" />
+
+            {/* Slow-spin outer dashed orbit */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
+              className="absolute inset-[-8px] rounded-full pointer-events-none"
+              style={{
+                border: '1px dashed rgba(230,161,87,0.30)',
+                boxSizing: 'border-box',
+              }}
             />
+
+            {/* Static thin solid ring */}
+            <div
+              className="absolute inset-[-4px] rounded-full pointer-events-none"
+              style={{ border: '1px solid rgba(230,161,87,0.18)', boxSizing: 'border-box' }}
+            />
+
+            {/* Diamond accent marks at compass positions */}
+            {[0, 90, 180, 270].map((deg) => (
+              <div
+                key={deg}
+                className="absolute w-2 h-2 pointer-events-none"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: `rotate(${deg}deg) translateY(-142%) translateX(-50%) rotate(45deg)`,
+                  background: 'rgba(230,161,87,0.75)',
+                  boxSizing: 'border-box',
+                }}
+              />
+            ))}
+
+            {/* Portrait — octagonal clip via clip-path for editorial crop */}
+            <div className="absolute inset-0 overflow-hidden rounded-full shadow-2xl">
+              <img 
+                src={heroPortrait} 
+                alt="王静茹 (Jingru Wang)" 
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'center 18%' }}
+              />
+              {/* subtle warm inner vignette */}
+              <div className="absolute inset-0 rounded-full ring-1 ring-inset ring-primary/15 shadow-[inset_0_0_32px_rgba(12,10,7,0.45)]" />
+            </div>
+
+            {/* Amber arc segments: two short arcs at top-left / bottom-right */}
+            <svg
+              className="absolute inset-[-12px] pointer-events-none"
+              viewBox="0 0 320 320"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="160" cy="160" r="152"
+                stroke="#e6a157" strokeWidth="1.5" strokeOpacity="0.45"
+                strokeDasharray="48 208"
+                strokeDashoffset="0"
+                strokeLinecap="round"
+              />
+              <circle cx="160" cy="160" r="152"
+                stroke="#e6a157" strokeWidth="1.5" strokeOpacity="0.25"
+                strokeDasharray="48 208"
+                strokeDashoffset="128"
+                strokeLinecap="round"
+              />
+            </svg>
           </motion.div>
 
           <div className="flex flex-col flex-1 space-y-6 text-center md:text-left">
