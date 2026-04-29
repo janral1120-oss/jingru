@@ -29,11 +29,11 @@ function ToolCard({ sector, index }: { sector: CoreSector; index: number }) {
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.55, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       onMouseEnter={() => setFlipped(true)}
       onMouseLeave={() => setFlipped(false)}
       onClick={() => setFlipped((f) => !f)}
-      className="cursor-pointer select-none"
+      className="cursor-pointer select-none transition-shadow duration-500 hover:shadow-[0_8px_32px_rgba(230,161,87,0.22)]"
       style={{ perspective: '1200px', height: '260px' }}
     >
       <motion.div
@@ -144,7 +144,7 @@ function ToolCard({ sector, index }: { sector: CoreSector; index: number }) {
 
 export function CoreSectors() {
   return (
-    <section id="sectors" className="relative py-20 md:py-24 overflow-hidden bg-card/20">
+    <section id="sectors" className="relative py-28 md:py-32 overflow-hidden bg-card/20">
       {/* faint amber wash */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[80%] max-w-4xl h-40 rounded-full bg-primary/8 blur-3xl" />

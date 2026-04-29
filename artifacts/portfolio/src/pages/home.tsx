@@ -8,6 +8,7 @@ import { SkillMap } from "@/components/portfolio/SkillMap";
 import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
 import { SocialOps } from "@/components/portfolio/SocialOps";
 import { Testimonials } from "@/components/portfolio/Testimonials";
+import { Contact } from "@/components/portfolio/Contact";
 
 export default function Home() {
   return (
@@ -18,8 +19,7 @@ export default function Home() {
       <div className="relative z-10 flex flex-col max-w-[1920px] mx-auto">
         <Hero />
 
-        {/* Subtle separator */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-10 opacity-50" />
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-40" />
 
         <CoreSectors />
 
@@ -35,9 +35,7 @@ export default function Home() {
 
         <Testimonials />
 
-        <footer className="py-12 text-center text-muted-foreground/60 text-sm border-t border-border mt-12">
-          <p>© {new Date().getFullYear()} 王静茹 (Jingru Wang). Crafted with intentionality.</p>
-        </footer>
+        <Contact />
       </div>
     </main>
   );

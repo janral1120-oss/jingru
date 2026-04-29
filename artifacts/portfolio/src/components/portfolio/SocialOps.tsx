@@ -66,7 +66,7 @@ function Block({ block, index }: { block: SocialOpsBlock; index: number }) {
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="relative rounded-2xl border border-border/70 bg-card/60 backdrop-blur-sm p-6 md:p-8 hover:border-primary/50 transition-colors"
     >
       <div className="absolute top-6 right-6 font-mono text-[10px] tracking-[0.22em] text-muted-foreground/60">

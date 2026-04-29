@@ -146,6 +146,7 @@ export const careerJourney: CareerNode[] = [
       "统筹演出直播全流程（20+ 剧目），建立技术标准与内容 SOP，总观看人次超 5000 万，获国家基金补贴及央视转播",
       "主导搭建直播电商体系，制定选品策略与流量节奏，以 3 万成本撬动 30 万 GMV（ROI 1:10），并沉淀为可复用的 SOP",
       "构建小红书达人资源库及合作标准，年合作达人 100+，赋能团队实现百万级品牌曝光与销售转化",
+      "掌握演出全流程生命周期运营：从立项报批、技术合成、票务策略到演出现场统筹，确保 20+ 剧目零事故落地，现场管控到统筹结算的完整商业闭环",
     ],
   },
   {
@@ -165,50 +166,31 @@ export const careerJourney: CareerNode[] = [
   },
 ];
 
+// ─── Skill Map: 5 clusters (pentagonal layout) ───
 export const skillClusters: SkillCluster[] = [
   {
-    id: "core-management",
-    label: "管理力核心",
-    isCore: true,
+    id: "management",
+    label: "管理力",
     children: [
-      { id: "mg-1", label: "项目全周期管理", detail: "里程碑 / 风险 / 多线程" },
-      { id: "mg-2", label: "跨部门资源整合", detail: "工程 · 运营 · 营销 · 文创 · 政府" },
-      { id: "mg-3", label: "标准化体系搭建", detail: "SOP · 知识库 · 质量基线" },
-      { id: "mg-4", label: "影响力传播与申报", detail: "国家基金 · 主流媒体 · 行业奖项" },
+      { id: "mg-1", label: "跨部门资源整合", detail: "工程 · 运营 · 营销 · 政府" },
+      { id: "mg-2", label: "标准化体系搭建", detail: "SOP · 知识库 · 质量基线" },
+      { id: "mg-3", label: "项目全周期管理", detail: "里程碑 / 风险 / 多线程" },
+      { id: "mg-4", label: "影响力传播与申报", detail: "国家基金 · 主流媒体" },
     ],
   },
   {
-    id: "user-insight",
-    label: "用户洞察",
-    isCore: true,
-    children: [
-      { id: "ui-1", label: "双账号运营", detail: "工作号 + 个人号" },
-      { id: "ui-2", label: "用户评论分析", detail: "数据驱动选题" },
-      { id: "ui-3", label: "情绪捕捉", detail: "共情内容创作" },
-    ],
-  },
-  {
-    id: "ai-tools",
-    label: "AI 营销工具",
+    id: "ai-apps",
+    label: "AI 工具与应用",
     children: [
       { id: "ai-1", label: "Midjourney", detail: "视觉提效 3 倍" },
-      { id: "ai-2", label: "ChatGPT & DeepSeek", detail: "文案脚本" },
-      { id: "ai-3", label: "AI 考试 Agent", detail: "评茶员题库" },
-      { id: "ai-4", label: "旅行 Agent 设计", detail: "AI + 文旅" },
-    ],
-  },
-  {
-    id: "ai-learning",
-    label: "AI 学习能力",
-    children: [
-      { id: "al-1", label: "自主搭建智能体", detail: "0 代码 Agent" },
-      { id: "al-2", label: "AIGC 工具迭代", detail: "持续追踪与替换" },
-      { id: "al-3", label: "跨领域整合", detail: "营销 / 文旅 / 培训" },
+      { id: "ai-2", label: "ChatGPT / DeepSeek", detail: "文案脚本" },
+      { id: "ai-3", label: "AI Agent 搭建", detail: "0 代码实现" },
+      { id: "ai-4", label: "AIGC 工具迭代", detail: "持续追踪替换" },
     ],
   },
   {
     id: "marketing",
-    label: "整合营销策划",
+    label: "整合营销",
     children: [
       { id: "mkt-1", label: "爆款事件打造", detail: "卡门返场" },
       { id: "mkt-2", label: "跨界资源整合" },
@@ -216,21 +198,23 @@ export const skillClusters: SkillCluster[] = [
     ],
   },
   {
-    id: "sop",
-    label: "产品化运营 SOP",
+    id: "data-ops",
+    label: "数据与运营",
     children: [
-      { id: "sop-1", label: "活动 SOP 制定" },
-      { id: "sop-2", label: "跨地域远程协同", detail: "15 城巡演" },
-      { id: "sop-3", label: "物料清单标准化" },
+      { id: "do-1", label: "A/B 测试" },
+      { id: "do-2", label: "活动数据看板" },
+      { id: "do-3", label: "ROI 分析", detail: "1:10" },
+      { id: "do-4", label: "活动 SOP 制定" },
+      { id: "do-5", label: "跨地域远程协同", detail: "15 城巡演" },
     ],
   },
   {
-    id: "data",
-    label: "数据分析与复盘",
+    id: "user-insight",
+    label: "用户洞察",
     children: [
-      { id: "data-1", label: "ROI 分析", detail: "1:10" },
-      { id: "data-2", label: "活动数据看板" },
-      { id: "data-3", label: "A/B 测试" },
+      { id: "ui-1", label: "双账号运营", detail: "工作号 + 个人号" },
+      { id: "ui-2", label: "用户评论分析" },
+      { id: "ui-3", label: "情绪捕捉", detail: "共情内容创作" },
     ],
   },
 ];

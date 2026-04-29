@@ -28,7 +28,7 @@ function ProjectCard({
       initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={onMouseMove}
       onMouseLeave={reset}
       onClick={onOpen}
@@ -107,7 +107,7 @@ function ProjectCard({
           </p>
         </div>
 
-        <div className="mt-auto pt-6 flex items-center gap-3 text-[11px] tracking-[0.18em] uppercase text-muted-foreground group-hover:text-primary transition-colors">
+        <div className="mt-auto pt-6 flex items-center gap-3 text-[11px] tracking-[0.18em] uppercase font-mono text-muted-foreground group-hover:text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(230,161,87,0.6)]">
           <span>{project.isCombined ? 'View Timeline' : 'Read Full Case'}</span>
           <span className="flex-1 h-px bg-border group-hover:bg-primary/60 transition-colors" />
         </div>

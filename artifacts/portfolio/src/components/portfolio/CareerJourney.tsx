@@ -3,7 +3,7 @@ import { careerJourney } from '@/lib/portfolioData';
 
 export function CareerJourney() {
   return (
-    <section className="py-24 relative overflow-hidden" id="career">
+    <section className="py-32 relative overflow-hidden" id="career">
       <div className="container mx-auto px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -34,7 +34,7 @@ export function CareerJourney() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.7, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
                 className="group relative"
               >
                 {/* image frame */}

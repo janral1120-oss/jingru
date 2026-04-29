@@ -9,7 +9,7 @@ function TestimonialCard({ item, index }: { item: Testimonial; index: number }) 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{
-        duration: 0.55,
+        duration: 0.8,
         delay: (index % 3) * 0.08 + Math.floor(index / 3) * 0.05,
         ease: [0.22, 1, 0.36, 1],
       }}
