@@ -50,8 +50,8 @@ export function MarqueeProof() {
               key={i}
               className="flex-shrink-0 transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1"
               style={{
-                width: '165px',
-                height: '264px',
+                width: '178px',
+                height: '320px',
                 borderRadius: '14px',
                 border: '1.5px solid rgba(230,161,87,0.28)',
                 background: 'rgba(26,20,16,0.7)',
@@ -59,13 +59,13 @@ export function MarqueeProof() {
                 overflow: 'hidden',
               }}
             >
-              {/* Clip top ~8% to remove phone status bar */}
-              <div style={{ clipPath: 'inset(8% 0 0 0 round 14px)', height: '100%' }}>
+              {/* Clip top ~6% to remove phone status bar, contain so no data is cut */}
+              <div style={{ clipPath: 'inset(6% 0 0 0 round 14px)', height: '100%' }}>
                 <img
                   src={src}
                   alt={`social proof ${(i % SCREENSHOTS.length) + 1}`}
                   className="w-full h-full"
-                  style={{ objectFit: 'cover', objectPosition: 'top center' }}
+                  style={{ objectFit: 'contain', objectPosition: 'top center', background: 'rgba(245,240,232,0.04)' }}
                   loading="lazy"
                 />
               </div>

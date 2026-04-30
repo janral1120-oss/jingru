@@ -89,7 +89,7 @@ function Block({ block, index }: { block: SocialOpsBlock; index: number }) {
         № {String(index + 1).padStart(2, '0')} / 03
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 lg:gap-8 lg:items-center">
         {/* left: copy */}
         <div className="flex flex-col">
           <p className="text-[10px] tracking-[0.32em] text-primary/80 font-mono uppercase mb-3">

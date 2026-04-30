@@ -341,14 +341,29 @@ function NormalModal({ project }: { project: ProjectCase }) {
 
         {project.detailImages && project.detailImages.length > 0 && (
           <div className="mt-10 pt-8 border-t border-border/40">
-            <div className={`grid gap-4 ${project.detailImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            <p className="text-[10px] font-mono tracking-[0.28em] uppercase mb-4"
+              style={{ color: 'rgba(230,161,87,0.65)' }}>
+              佐证图片 · Reference Material
+            </p>
+            <div className={`grid gap-5 ${project.detailImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
               {project.detailImages.map((src, i) => (
-                <img
+                <div
                   key={i}
-                  src={src}
-                  alt={`佐证图 ${i + 1}`}
-                  className="w-full rounded-xl border border-border/50 object-contain bg-background/50"
-                />
+                  className="overflow-hidden"
+                  style={{
+                    borderRadius: '14px',
+                    border: '1.5px solid rgba(230,161,87,0.32)',
+                    boxShadow: '0 6px 28px rgba(12,10,7,0.45), inset 0 1px 0 rgba(230,161,87,0.10)',
+                    background: 'rgba(26,20,16,0.60)',
+                  }}
+                >
+                  <img
+                    src={src}
+                    alt={`佐证图 ${i + 1}`}
+                    className="w-full object-contain"
+                    style={{ display: 'block' }}
+                  />
+                </div>
               ))}
             </div>
           </div>
