@@ -7,10 +7,10 @@ import { Manifesto } from "@/components/portfolio/Manifesto";
 import { SkillMap } from "@/components/portfolio/SkillMap";
 import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
 import { SocialOps } from "@/components/portfolio/SocialOps";
-import { Testimonials } from "@/components/portfolio/Testimonials";
 import { Contact } from "@/components/portfolio/Contact";
 import { CareerAmbience } from "@/components/portfolio/CareerAmbience";
 import { JourneyIndicator } from "@/components/portfolio/JourneyIndicator";
+import { TheaterEasterEgg } from "@/components/portfolio/TheaterEasterEgg";
 
 export default function Home() {
   return (
@@ -19,6 +19,7 @@ export default function Home() {
       <CursorGlow />
       <CareerAmbience />
       <JourneyIndicator />
+      <TheaterEasterEgg />
 
       <div className="relative z-10 flex flex-col max-w-[1920px] mx-auto">
         <Hero />
@@ -36,8 +37,6 @@ export default function Home() {
         <FeaturedProjects />
 
         <SocialOps />
-
-        <Testimonials />
 
         <Contact />
       </div>

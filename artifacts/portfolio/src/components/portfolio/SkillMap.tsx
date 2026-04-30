@@ -1,164 +1,172 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { skillClusters } from '@/lib/portfolioData';
+import { TrendingUp, Sparkles, MapPin, Network, Eye, Layers, Video, CheckSquare, BarChart2 } from 'lucide-react';
 
-type Pt = { x: number; y: number };
-
-type LabelNode = {
+type BentoCard = {
   id: string;
-  label: string;
-  detail?: string;
-  pos: Pt;
-  kind: 'center' | 'hub' | 'leaf';
+  icon: React.ReactNode;
+  title: string;
+  metric: string;
+  metricLabel: string;
+  desc: string;
+  colSpan: string;
+  rowSpan?: string;
+  accent?: boolean;
 };
 
-type LineSpec = { from: Pt; to: Pt; key: string; seed: number };
+const cards: BentoCard[] = [
+  {
+    id: 'b1',
+    icon: <TrendingUp className="w-6 h-6" />,
+    title: '整合营销全案操盘',
+    metric: '百万级',
+    metricLabel: '品牌曝光',
+    desc: '从 0 到 1 孵化 IP，卡门返场单视频破百万，沉淀「预埋热点—引爆—分发」SOP 并复用至多个项目。',
+    colSpan: 'md:col-span-2',
+    rowSpan: 'md:row-span-2',
+    accent: true,
+  },
+  {
+    id: 'b2',
+    icon: <BarChart2 className="w-6 h-6" />,
+    title: '直播电商 · ROI',
+    metric: '1:10',
+    metricLabel: '单场ROI',
+    desc: '3 万撬动 30 万 GMV，选品 · 定价 · 逼单全策略，GMV 累计破百万。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b3',
+    icon: <Sparkles className="w-6 h-6" />,
+    title: 'AIGC 内容提效',
+    metric: '−40%',
+    metricLabel: '创意周期',
+    desc: 'Midjourney 出图 + ChatGPT 批量文案，AI Agent 0 代码自动化。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b4',
+    icon: <Video className="w-6 h-6" />,
+    title: '演出直播统筹',
+    metric: '5000w+',
+    metricLabel: '观看人次',
+    desc: '20+ 剧目，技术+内容双 SOP，国家基金补贴，央视转播。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b5',
+    icon: <Layers className="w-6 h-6" />,
+    title: '在地化 SOP 体系',
+    metric: '+30%',
+    metricLabel: '筹备效率',
+    desc: '阿那亚三亚·北戴河·金山岭多门店标准化体系落地，新人 3 天上手，30+ 对标案例库。',
+    colSpan: 'md:col-span-2',
+    rowSpan: 'md:row-span-2',
+    accent: true,
+  },
+  {
+    id: 'b6',
+    icon: <MapPin className="w-6 h-6" />,
+    title: '跨地域标准化运营',
+    metric: '15 城',
+    metricLabel: '巡演覆盖',
+    desc: '演出工具包全国复制，「中央-地方」接口制，平均上座率 70%。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b7',
+    icon: <Eye className="w-6 h-6" />,
+    title: '用户洞察 · 爆款内容',
+    metric: '800w+',
+    metricLabel: '单篇浏览',
+    desc: '情绪捕捉与趋势预判，单篇 3.1w 点赞，双账号自然流量方法论。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b8',
+    icon: <Network className="w-6 h-6" />,
+    title: '资源整合 · 达人矩阵',
+    metric: '100+',
+    metricLabel: '达人资源',
+    desc: '精细化种草 SOP，从筛选·共创到转化追踪，赋能品牌完整销售闭环。',
+    colSpan: 'md:col-span-1',
+  },
+  {
+    id: 'b9',
+    icon: <CheckSquare className="w-6 h-6" />,
+    title: '项目全周期管理',
+    metric: '20+',
+    metricLabel: '剧目零事故',
+    desc: '里程碑追踪、多线并行、风险预案，从立项到结项全程把控，沉淀公司级操盘手册。',
+    colSpan: 'md:col-span-2',
+  },
+];
 
-const VW = 1300;
-const VH = 880;
+function Card({ card, index }: { card: BentoCard; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4, scale: 1.01 }}
+      className={[
+        'group relative rounded-2xl border p-5 md:p-6 flex flex-col gap-3 overflow-hidden cursor-default',
+        'transition-all duration-400',
+        card.colSpan,
+        card.rowSpan ?? '',
+        card.accent
+          ? 'border-primary/40 bg-gradient-to-br from-primary/10 via-card/80 to-card/60 hover:border-primary/70 hover:shadow-[0_0_40px_rgba(230,161,87,0.25)]'
+          : 'border-border/60 bg-card/60 hover:border-primary/40 hover:bg-card/80 hover:shadow-[0_8px_30px_rgba(230,161,87,0.12)]',
+        'backdrop-blur-sm',
+      ].join(' ')}
+    >
+      {/* background shimmer for accent cards */}
+      {card.accent && (
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_20%_30%,rgba(230,161,87,0.08),transparent)] pointer-events-none" />
+      )}
 
-// ─── Pentagon layout: 5 clusters evenly spaced from top ───
-// Angles: -π/2, -π/10, 0.3π, 0.7π, -0.9π   (72° apart)
-const CLUSTER_LAYOUT: Record<string, { hubAngle: number; hubR: number; childR: number; childSpread: number }> = {
-  management:   { hubAngle: -Math.PI / 2,       hubR: 270, childR: 420, childSpread: 0.65 },
-  marketing:    { hubAngle: -Math.PI / 10,       hubR: 270, childR: 420, childSpread: 0.50 },
-  'data-ops':   { hubAngle:  Math.PI * 0.30,     hubR: 270, childR: 430, childSpread: 0.68 },
-  'user-insight': { hubAngle: Math.PI * 0.70,    hubR: 270, childR: 415, childSpread: 0.45 },
-  'ai-apps':    { hubAngle: -Math.PI * 0.90,     hubR: 270, childR: 430, childSpread: 0.55 },
-};
+      {/* icon */}
+      <div className={[
+        'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0',
+        'border transition-colors duration-300',
+        card.accent
+          ? 'bg-primary/15 border-primary/40 text-primary group-hover:bg-primary/25'
+          : 'bg-primary/10 border-primary/20 text-primary/80 group-hover:bg-primary/18 group-hover:border-primary/35',
+      ].join(' ')}>
+        {card.icon}
+      </div>
 
-function seededRandom(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 9301 + 49297) % 233280;
-    return s / 233280;
-  };
-}
+      {/* big metric */}
+      <div className="flex-1 flex flex-col">
+        <div className="font-mono text-3xl md:text-4xl font-bold text-primary tracking-tight leading-none">
+          {card.metric}
+        </div>
+        <div className="text-[10px] tracking-[0.22em] text-primary/60 font-mono uppercase mt-1">
+          {card.metricLabel}
+        </div>
+      </div>
 
-function buildLayout(clusters: typeof skillClusters) {
-  const labels: LabelNode[] = [
-    { id: 'center', label: 'Skill Map', pos: { x: 0, y: 0 }, kind: 'center' },
-  ];
-  const lines: LineSpec[] = [];
-
-  clusters.forEach((cluster, ci) => {
-    const layout = CLUSTER_LAYOUT[cluster.id];
-    if (!layout) return;
-
-    const hubPos: Pt = {
-      x: Math.cos(layout.hubAngle) * layout.hubR,
-      y: Math.sin(layout.hubAngle) * layout.hubR,
-    };
-    labels.push({ id: cluster.id, label: cluster.label, pos: hubPos, kind: 'hub' });
-    lines.push({ from: { x: 0, y: 0 }, to: hubPos, key: `hub-${cluster.id}`, seed: 7 + ci * 13 });
-
-    const n = cluster.children.length;
-    cluster.children.forEach((child, ki) => {
-      const t = n === 1 ? 0 : ki / (n - 1) - 0.5;
-      const childAngle = layout.hubAngle + t * layout.childSpread;
-      const radial = layout.childR + (ki % 2 === 0 ? -18 : 18) + ((ki * 11) % 15);
-      const childPos: Pt = {
-        x: Math.cos(childAngle) * radial,
-        y: Math.sin(childAngle) * radial,
-      };
-
-      labels.push({ id: child.id, label: child.label, detail: child.detail, pos: childPos, kind: 'leaf' });
-      lines.push({ from: hubPos, to: childPos, key: `${cluster.id}-${child.id}`, seed: ci * 100 + ki * 7 + 3 });
-    });
-  });
-
-  return { labels, lines };
-}
-
-function buildCurve(from: Pt, to: Pt, seed: number) {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-  const rand = seededRandom(seed);
-
-  const px = -dy / dist;
-  const py = dx / dist;
-  const offset = (rand() - 0.5) * dist * 0.3;
-  const cx = (from.x + to.x) / 2 + px * offset;
-  const cy = (from.y + to.y) / 2 + py * offset;
-
-  const path = `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
-
-  const particles: { x: number; y: number; r: number; o: number }[] = [];
-  const count = Math.max(6, Math.round(dist / 14));
-  for (let i = 1; i < count; i++) {
-    const t = i / count;
-    const mt = 1 - t;
-    const x = mt * mt * from.x + 2 * mt * t * cx + t * t * to.x;
-    const y = mt * mt * from.y + 2 * mt * t * cy + t * t * to.y;
-    const jitter = 5 + rand() * 4;
-    particles.push({
-      x: x + (rand() - 0.5) * jitter,
-      y: y + (rand() - 0.5) * jitter,
-      r: 0.5 + rand() * 1.6,
-      o: 0.35 + rand() * 0.55,
-    });
-  }
-  return { path, particles };
+      {/* title + desc */}
+      <div>
+        <h3 className="font-serif font-semibold text-foreground text-base md:text-lg leading-tight mb-2">
+          {card.title}
+        </h3>
+        <p className="text-[13px] text-muted-foreground/80 leading-relaxed">
+          {card.desc}
+        </p>
+      </div>
+    </motion.div>
+  );
 }
 
 export function SkillMap() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
-
-  const { labels, lines } = useMemo(() => buildLayout(skillClusters), []);
-  const curves = useMemo(
-    () => lines.map((l) => ({ ...l, ...buildCurve(l.from, l.to, l.seed) })),
-    [lines],
-  );
-
-  const ambientParticles = useMemo(() => {
-    const rand = seededRandom(317);
-    return Array.from({ length: 100 }).map(() => {
-      const angle = rand() * Math.PI * 2;
-      const r = 70 + rand() * (VW / 2 - 90);
-      return {
-        x: Math.cos(angle) * r,
-        y: Math.sin(angle) * r * 0.85,
-        r: 0.35 + rand() * 1.1,
-        o: 0.08 + rand() * 0.28,
-      };
-    });
-  }, []);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    let raf = 0;
-    let pending: { x: number; y: number } | null = null;
-
-    const onMove = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      pending = {
-        x: (e.clientX - rect.left) / rect.width * VW - VW / 2,
-        y: (e.clientY - rect.top) / rect.height * VH - VH / 2,
-      };
-      if (!raf) {
-        raf = requestAnimationFrame(() => {
-          if (pending) setMouse(pending);
-          raf = 0;
-        });
-      }
-    };
-    const onLeave = () => setMouse(null);
-
-    el.addEventListener('pointermove', onMove);
-    el.addEventListener('pointerleave', onLeave);
-    return () => {
-      el.removeEventListener('pointermove', onMove);
-      el.removeEventListener('pointerleave', onLeave);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
-    <section className="py-32 bg-card/30 relative overflow-hidden" id="skills">
-      <div className="container mx-auto px-6">
+    <section className="py-24 bg-card/30 relative overflow-hidden" id="skills">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] max-w-2xl h-96 rounded-full bg-primary/6 blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -166,130 +174,21 @@ export function SkillMap() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-12"
         >
+          <p className="text-[11px] tracking-[0.32em] text-primary/80 font-mono uppercase mb-3">
+            Core Competencies · 能力图谱
+          </p>
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-            能力图谱 <span className="text-primary">Skill Map</span>
+            九大核心能力 <span className="text-primary">Skill Map</span>
           </h2>
-          <p className="mt-3 text-sm text-muted-foreground/80 tracking-wide">
-            五大能力集群环绕中枢 — 越靠近光标，能力越发亮。
+          <p className="mt-3 text-sm text-muted-foreground/80 tracking-wide max-w-lg mx-auto">
+            商业增长 · AIGC 提效 · 跨界资源整合 · 在地化 SOP — 每张卡片对应真实落地案例。
           </p>
         </motion.div>
 
-        <div
-          ref={containerRef}
-          className="relative w-full max-w-6xl mx-auto"
-          style={{ aspectRatio: `${VW} / ${VH}` }}
-        >
-          <svg
-            viewBox={`${-VW / 2} ${-VH / 2} ${VW} ${VH}`}
-            className="absolute inset-0 w-full h-full"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <radialGradient id="sm-center-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%"   stopColor="rgba(230,161,87,0.50)" />
-                <stop offset="40%"  stopColor="rgba(230,161,87,0.16)" />
-                <stop offset="100%" stopColor="rgba(230,161,87,0)"    />
-              </radialGradient>
-              <radialGradient id="sm-hub-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%"   stopColor="rgba(230,161,87,0.32)" />
-                <stop offset="100%" stopColor="rgba(230,161,87,0)"    />
-              </radialGradient>
-            </defs>
-
-            <circle cx="0" cy="0" r="220" fill="url(#sm-center-glow)" />
-
-            {ambientParticles.map((p, i) => (
-              <circle key={`amb-${i}`} cx={p.x} cy={p.y} r={p.r} fill="rgba(230,161,87,1)" opacity={p.o} />
-            ))}
-
-            {curves.map((c) => (
-              <g key={c.key}>
-                <path d={c.path} fill="none" stroke="rgba(230,161,87,0.15)" strokeWidth="1" strokeLinecap="round" />
-                {c.particles.map((p, i) => (
-                  <circle key={i} cx={p.x} cy={p.y} r={p.r} fill="rgba(245,240,232,1)" opacity={p.o} />
-                ))}
-              </g>
-            ))}
-
-            {labels
-              .filter((l) => l.kind !== 'center')
-              .map((l) => (
-                <circle
-                  key={`hub-glow-${l.id}`}
-                  cx={l.pos.x}
-                  cy={l.pos.y}
-                  r={l.kind === 'hub' ? 58 : 26}
-                  fill="url(#sm-hub-glow)"
-                  opacity={l.kind === 'hub' ? 0.9 : 0.45}
-                />
-              ))}
-          </svg>
-
-          {labels.map((label) => {
-            const xPct = 50 + (label.pos.x / VW) * 100;
-            const yPct = 50 + (label.pos.y / VH) * 100;
-
-            let scale = 1;
-            let glow = 0;
-            if (mouse) {
-              const dx = label.pos.x - mouse.x;
-              const dy = label.pos.y - mouse.y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              const reach = label.kind === 'leaf' ? 160 : 220;
-              if (dist < reach) {
-                const t = 1 - dist / reach;
-                scale = 1 + t * (label.kind === 'leaf' ? 0.22 : 0.18);
-                glow = t;
-              }
-            }
-
-            const isCenter = label.kind === 'center';
-            const isHub = label.kind === 'hub';
-
-            return (
-              <div
-                key={label.id}
-                className={`absolute pointer-events-none whitespace-nowrap text-center ${isCenter ? 'z-30' : isHub ? 'z-20' : 'z-10'}`}
-                style={{
-                  left: `${xPct}%`,
-                  top: `${yPct}%`,
-                  transform: `translate(-50%, -50%) scale(${scale})`,
-                  transition: 'transform 220ms cubic-bezier(0.22,1,0.36,1), filter 220ms ease-out',
-                  filter: `drop-shadow(0 0 ${4 + glow * 16}px rgba(230,161,87,${0.2 + glow * 0.6}))`,
-                }}
-              >
-                {isCenter ? (
-                  <div className="relative">
-                    <div className="absolute inset-0 -m-6 rounded-full bg-background/70 backdrop-blur-md border border-primary/40 shadow-[0_0_60px_rgba(230,161,87,0.25)]" />
-                    <div className="relative font-serif italic font-bold text-2xl md:text-3xl text-primary tracking-[0.22em] px-8 py-4">
-                      {label.label}
-                    </div>
-                  </div>
-                ) : isHub ? (
-                  <div className="relative">
-                    <div className="absolute inset-0 -mx-3 -my-1.5 rounded-full bg-background/60 backdrop-blur-sm border border-primary/35" />
-                    <div className="relative font-serif font-semibold text-base md:text-xl text-primary tracking-wider px-4 py-1.5">
-                      {label.label}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div className="absolute inset-0 -mx-2 -my-1 rounded-md bg-background/45 backdrop-blur-[2px]" />
-                    <div className="relative px-2.5 py-1">
-                      <div className="text-xs md:text-sm font-medium text-foreground/90 tracking-wide">
-                        {label.label}
-                      </div>
-                      {label.detail && (
-                        <div className="text-[10px] md:text-[11px] text-secondary/80 mt-0.5 tracking-wider font-mono">
-                          {label.detail}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 max-w-6xl mx-auto">
+          {cards.map((card, i) => (
+            <Card key={card.id} card={card} index={i} />
+          ))}
         </div>
       </div>
     </section>

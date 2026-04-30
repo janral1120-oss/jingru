@@ -115,9 +115,9 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <h2 className="text-xl md:text-2xl font-serif text-muted-foreground mb-2">王静茹 (Jingru Wang)</h2>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-foreground leading-tight">
-                体验产品 · 整合营销 <br />
-                <span className="text-primary interactive-glow transition-all duration-300">项目统筹</span>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-foreground leading-tight">
+                品效合一的整合营销与<br />
+                <span className="text-primary interactive-glow transition-all duration-300">增长操盘手</span>
               </h1>
             </motion.div>
 
@@ -127,10 +127,10 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl leading-relaxed"
             >
-              3年+整合营销与项目统筹 <span className="mx-2 text-primary/50">|</span>
-              从0到1孵化IP <span className="mx-2 text-primary/50">|</span>
-              跨地域标准化运营 <span className="mx-2 text-primary/50">|</span>
-              AI提效40%
+              3年+整合营销与直播销售 <span className="mx-2 text-primary/50">|</span>
+              单场ROI 1:10 <span className="mx-2 text-primary/50">|</span>
+              累计GMV百万+ <span className="mx-2 text-primary/50">|</span>
+              从0到1孵化IP
             </motion.p>
 
             <motion.div
