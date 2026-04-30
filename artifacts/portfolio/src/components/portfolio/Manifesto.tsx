@@ -3,7 +3,7 @@ import { manifesto } from '@/lib/portfolioData';
 
 export function Manifesto() {
   return (
-    <section id="manifesto" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="manifesto" className="relative pt-20 md:pt-28 pb-8 overflow-hidden">
       {/* faint amber wash */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-3xl h-72 rounded-full bg-primary/10 blur-3xl" />

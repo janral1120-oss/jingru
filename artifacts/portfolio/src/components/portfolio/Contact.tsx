@@ -115,7 +115,7 @@ export function Contact() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="font-serif italic text-muted-foreground/75 text-lg md:text-xl tracking-wide mb-4"
         >
-          不下班的策划人，常在线的体验官。我已准备好迎接下一个好故事。
+          不下班的策划人，常在线的体验官。
         </motion.p>
 
         {/* tea cup CTA */}

@@ -18,8 +18,8 @@ export function MarqueeProof() {
   const doubled = [...SCREENSHOTS, ...SCREENSHOTS];
 
   return (
-    <div className="mt-16 relative">
-      {/* Section label */}
+    <div className="relative pb-16">
+      {/* Section label — tight top spacing since Manifesto is above */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -41,38 +41,31 @@ export function MarqueeProof() {
       {/* Marquee container */}
       <div
         className="overflow-hidden relative"
-        style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}
+        style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)' }}
       >
-        {/* Left / right fade masks */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to right, rgb(26,20,16), transparent)' }}
-        />
-        <div
-          className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to left, rgb(26,20,16), transparent)' }}
-        />
-
         {/* Scrolling strip — pause on hover */}
-        <div className="marquee-strip flex gap-4 w-max">
+        <div className="marquee-strip flex gap-3 w-max py-2">
           {doubled.map((src, i) => (
             <div
               key={i}
-              className="flex-shrink-0 rounded-xl border border-border/60 bg-card/40 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_6px_28px_rgba(230,161,87,0.20)] hover:scale-[1.02]"
+              className="flex-shrink-0 transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1"
               style={{
-                width: '150px',
-                height: '240px',
-                boxShadow: '0 4px 18px rgba(12,10,7,0.45)',
+                width: '165px',
+                height: '264px',
+                borderRadius: '14px',
+                border: '1.5px solid rgba(230,161,87,0.28)',
+                background: 'rgba(26,20,16,0.7)',
+                boxShadow: '0 4px 20px rgba(12,10,7,0.5), inset 0 1px 0 rgba(230,161,87,0.12)',
                 overflow: 'hidden',
               }}
             >
-              {/* Clip top ~8% to remove phone status bar, keep all data */}
-              <div style={{ clipPath: 'inset(8% 0 0 0)', height: '100%' }}>
+              {/* Clip top ~8% to remove phone status bar */}
+              <div style={{ clipPath: 'inset(8% 0 0 0 round 14px)', height: '100%' }}>
                 <img
                   src={src}
                   alt={`social proof ${(i % SCREENSHOTS.length) + 1}`}
                   className="w-full h-full"
-                  style={{ objectFit: 'contain', objectPosition: 'top center' }}
+                  style={{ objectFit: 'cover', objectPosition: 'top center' }}
                   loading="lazy"
                 />
               </div>
@@ -82,11 +75,11 @@ export function MarqueeProof() {
       </div>
 
       {/* Amber accent */}
-      <div className="mt-8 mx-auto w-24 h-px rounded-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="mt-10 mx-auto w-24 h-px rounded-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
       <style>{`
         .marquee-strip {
-          animation: marquee-scroll 52s linear infinite;
+          animation: marquee-scroll 55s linear infinite;
           will-change: transform;
         }
         .marquee-strip:hover {

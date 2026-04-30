@@ -220,11 +220,28 @@ function CombinedModal({ project }: { project: ProjectCase }) {
                 </span>
               </div>
 
-              {/* battle thumbnail */}
-              <div
-                className="w-full h-32 rounded-xl overflow-hidden mb-4 bg-cover bg-center border border-border/50"
-                style={{ backgroundImage: `url(${battle.image})` }}
-              />
+              {/* battle thumbnail / photo strip */}
+              {battle.images && battle.images.length > 1 ? (
+                <div className="w-full mb-4 overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-2 w-max">
+                    {battle.images.map((src, pi) => (
+                      <img
+                        key={pi}
+                        src={src}
+                        alt={`${battle.title} 图 ${pi + 1}`}
+                        className="flex-shrink-0 rounded-xl border border-border/60 object-cover"
+                        style={{ width: 180, height: 128, objectFit: 'cover', borderRadius: 12 }}
+                      />
+                    ))}
+                  </div>
+                  <style>{`.scrollbar-hide::-webkit-scrollbar{display:none}.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}`}</style>
+                </div>
+              ) : (
+                <div
+                  className="w-full h-32 rounded-xl overflow-hidden mb-4 border border-border/50"
+                  style={{ backgroundImage: `url(${battle.image})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: 12 }}
+                />
+              )}
 
               <h3 className="font-serif text-lg text-foreground font-bold mb-2 leading-tight">
                 {battle.title}

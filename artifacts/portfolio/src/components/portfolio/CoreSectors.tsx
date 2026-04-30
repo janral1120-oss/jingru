@@ -279,12 +279,13 @@ export function CoreSectors() {
                 .bento-grid {
                   display: grid;
                   grid-template-columns: 1fr 1fr;
+                  grid-template-rows: auto;
                 }
                 @media (min-width: 1024px) {
                   .bento-grid {
-                    grid-template-areas: ${JSON.stringify(GRID_TEMPLATE)};
+                    grid-template-areas: ${GRID_TEMPLATE};
                     grid-template-columns: repeat(3, 1fr);
-                    grid-template-rows: auto;
+                    grid-template-rows: auto auto auto;
                   }
                   .bento-grid > *:nth-child(1) { grid-area: c0; }
                   .bento-grid > *:nth-child(2) { grid-area: c1; }

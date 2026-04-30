@@ -1,3 +1,12 @@
+import changying1 from "@assets/常营发布会1_1777536906480.png";
+import changying2 from "@assets/常营发布会2_1777536906480.png";
+import changying3 from "@assets/常营发布会3_1777536906476.png";
+import wukesong1 from "@assets/五棵松发布会1_1777536906481.png";
+import wukesong2 from "@assets/五棵松发布会2_1777536906481.png";
+import wukesong3 from "@assets/五棵松发布会3_1777536906481.png";
+import wukesong4 from "@assets/五棵松发布会4_1777536906481.png";
+import wukesong5 from "@assets/五棵松发布会5_1777536906480.png";
+import wukesong6 from "@assets/五棵松发布会6_1777536906480.png";
 import careerYuelehui from "@/assets/career-yuelehui.png";
 import careerAranya from "@assets/（二）海南阿那亚商业运营有限公司北京分公司经历照片替换_1777460267810.jpg";
 import project15CitiesMap from "@/assets/map-15cities.svg";
@@ -57,6 +66,7 @@ export type ProjectBattle = {
   tags: string[];
   keyData: string;
   image: string;
+  images?: string[];
   star: { s: string; t: string; a: string; r: string };
 };
 
@@ -289,7 +299,8 @@ export const featuredProjects: ProjectCase[] = [
         tags: ["发布会策划", "空间联动", "创意冷餐会"],
         keyData:
           "3 个差异化场馆（音乐厅 · 剧场 · Livehouse）| 音乐演出植入 | 三层接连演出",
-        image: projectChangying,
+        image: changying2,
+        images: [changying1, changying2, changying3],
         star: {
           s: "2023 年 10 月，北京常营爱乐汇艺术空间落成，集音乐厅、剧场、Livehouse 三种业态于一体；常规剪彩式开幕难以让媒体与观众感知「三重空间」的差异与联动价值。",
           t: "策划一场打破场馆界限的「流动式」开业发布会，把三层 200 人级场馆贯通为同一条体验动线，让观众在演出中走完整个空间。",
@@ -302,7 +313,8 @@ export const featuredProjects: ProjectCase[] = [
         title: "发布会操盘 · 北京五棵松爱乐汇艺术空间开业",
         tags: ["官方发布会", "媒体统筹", "交响乐团演出"],
         keyData: "2 个 500 人场馆 | 30+ 媒体 | 交响乐团现场",
-        image: projectWukesong,
+        image: wukesong6,
+        images: [wukesong1, wukesong2, wukesong6, wukesong5, wukesong3, wukesong4],
         star: {
           s: "2024 年 5 月，五棵松新爱乐汇艺术空间（2 个 500 人场馆）需要建立「高端文化空间」的主流媒体心智，并借助商圈位置撬动家庭与商务客群。",
           t: "策划一场具有国家级质感的官方发布会，配合现场交响乐团演出与媒体矩阵，实现「官方背书 + 艺术势能 + 商场曝光」三位一体。",
