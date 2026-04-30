@@ -108,39 +108,42 @@ export function Hero() {
             </svg>
           </motion.div>
 
-          <div className="flex flex-col flex-1 space-y-6 text-center md:text-left">
+          <div className="flex flex-col flex-1 gap-3 text-center md:text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2 className="text-xl md:text-2xl font-serif text-muted-foreground mb-2">王静茹 (Jingru Wang)</h2>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-foreground leading-tight">
-                品效合一的整合营销与<br />
-                <span className="text-primary interactive-glow transition-all duration-300">增长操盘手</span>
+              <h2 className="text-base md:text-lg font-serif text-muted-foreground mb-1 tracking-wide">王静茹 (Jingru Wang)</h2>
+              <h1
+                className="font-serif font-bold tracking-tight text-foreground"
+                style={{ fontSize: 'clamp(2rem, 5.2vw, 3.6rem)', lineHeight: 1.12 }}
+              >
+                品效合一的整合营销<br />
+                <span className="text-primary interactive-glow transition-all duration-300">与增长操盘手</span>
               </h1>
             </motion.div>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl leading-relaxed"
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="text-sm md:text-base text-muted-foreground font-mono tracking-wide"
             >
-              3年+整合营销与直播销售 <span className="mx-2 text-primary/50">|</span>
-              单场ROI 1:10 <span className="mx-2 text-primary/50">|</span>
-              累计GMV百万+ <span className="mx-2 text-primary/50">|</span>
+              3年+整合营销与直播销售&nbsp;<span className="text-primary/50">|</span>&nbsp;
+              单场ROI 1:10&nbsp;<span className="text-primary/50">|</span>&nbsp;
+              累计GMV百万+&nbsp;<span className="text-primary/50">|</span>&nbsp;
               从0到1孵化IP
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55 }}
+              transition={{ duration: 0.6, delay: 0.48 }}
               className="flex items-center justify-center md:justify-start gap-3"
             >
               <span className="hidden md:inline-block w-8 h-px bg-primary/60" />
-              <p className="text-[13px] md:text-sm font-mono tracking-[0.18em] text-primary/85">
+              <p className="text-[12px] md:text-[13px] font-mono tracking-[0.18em] text-primary/85">
                 {heroSubTagline}
               </p>
             </motion.div>
