@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, MessageCircle, Link as LinkIcon, Smartphone } from 'lucide-react';
+import { Mail, MessageCircle, Phone, Smartphone } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { heroSubTagline, heroPortrait } from '@/lib/portfolioData';
@@ -17,11 +17,12 @@ export function Hero() {
     });
   };
 
+  const TEL = "13898171261";
   const contacts = [
-    { icon: <LinkIcon className="w-5 h-5" />, label: "飞书", value: "王静茹的飞书" },
-    { icon: <Smartphone className="w-5 h-5" />, label: "小红书", value: "@Lululune" },
-    { icon: <MessageCircle className="w-5 h-5" />, label: "微信", value: "jrlune" },
-    { icon: <Mail className="w-5 h-5" />, label: "邮箱", value: "13898171261@163.com" }
+    { icon: <Phone className="w-5 h-5" />, label: "电话", value: TEL, isTel: true },
+    { icon: <Smartphone className="w-5 h-5" />, label: "小红书", value: "@Lululune", isTel: false },
+    { icon: <MessageCircle className="w-5 h-5" />, label: "微信", value: "jrlune", isTel: false },
+    { icon: <Mail className="w-5 h-5" />, label: "邮箱", value: "13898171261@163.com", isTel: false },
   ];
 
   return (
@@ -156,22 +157,45 @@ export function Hero() {
             >
               <TooltipProvider>
                 {contacts.map((contact, idx) => (
-                  <Tooltip key={idx} delayDuration={100}>
+                  <Tooltip key={idx} delayDuration={80}>
                     <TooltipTrigger asChild>
-                      <button 
-                        onClick={() => handleCopy(contact.value, contact.label)}
-                        className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 interactive-glow group"
-                        aria-label={contact.label}
-                      >
-                        <span className="text-foreground group-hover:text-primary transition-colors">
-                          {contact.icon}
-                        </span>
-                      </button>
+                      {contact.isTel ? (
+                        <a
+                          href={`tel:${contact.value}`}
+                          className="p-3 rounded-full bg-card border border-primary/50 hover:border-primary hover:bg-primary/15 transition-all duration-300 interactive-glow group"
+                          aria-label={`拨打 ${contact.value}`}
+                        >
+                          <span className="text-primary group-hover:text-primary transition-colors">
+                            {contact.icon}
+                          </span>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => handleCopy(contact.value, contact.label)}
+                          className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 interactive-glow group"
+                          aria-label={contact.label}
+                        >
+                          <span className="text-foreground group-hover:text-primary transition-colors">
+                            {contact.icon}
+                          </span>
+                        </button>
+                      )}
                     </TooltipTrigger>
                     <TooltipContent className="bg-popover border-border text-foreground font-sans">
                       <p className="text-sm font-medium">{contact.label}</p>
-                      <p className="text-xs text-muted-foreground">{contact.value}</p>
-                      <p className="text-[10px] text-primary/70 mt-1">Click to copy</p>
+                      {contact.isTel ? (
+                        <>
+                          <p className="text-base font-mono font-bold text-primary tracking-wider mt-1">
+                            138 9817 1261
+                          </p>
+                          <p className="text-[10px] text-primary/70 mt-1">点击直接拨打</p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xs text-muted-foreground">{contact.value}</p>
+                          <p className="text-[10px] text-primary/70 mt-1">Click to copy</p>
+                        </>
+                      )}
                     </TooltipContent>
                   </Tooltip>
                 ))}

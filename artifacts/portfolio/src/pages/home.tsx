@@ -4,6 +4,7 @@ import { Hero } from "@/components/portfolio/Hero";
 import { CoreSectors } from "@/components/portfolio/CoreSectors";
 import { CareerJourney } from "@/components/portfolio/CareerJourney";
 import { Manifesto } from "@/components/portfolio/Manifesto";
+import { MarqueeProof } from "@/components/portfolio/MarqueeProof";
 import { SkillMap } from "@/components/portfolio/SkillMap";
 import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
 import { SocialOps } from "@/components/portfolio/SocialOps";
@@ -31,6 +32,8 @@ export default function Home() {
         <CareerJourney />
 
         <Manifesto />
+
+        <MarqueeProof />
 
         <SkillMap />
 

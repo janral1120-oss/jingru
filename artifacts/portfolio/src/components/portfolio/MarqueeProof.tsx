@@ -58,19 +58,24 @@ export function MarqueeProof() {
           {doubled.map((src, i) => (
             <div
               key={i}
-              className="flex-shrink-0 rounded-xl overflow-hidden border border-border/60 bg-card/40 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_6px_28px_rgba(230,161,87,0.20)] hover:scale-[1.03]"
+              className="flex-shrink-0 rounded-xl border border-border/60 bg-card/40 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_6px_28px_rgba(230,161,87,0.20)] hover:scale-[1.02]"
               style={{
                 width: '150px',
-                height: '230px',
+                height: '240px',
                 boxShadow: '0 4px 18px rgba(12,10,7,0.45)',
+                overflow: 'hidden',
               }}
             >
-              <img
-                src={src}
-                alt={`social proof ${(i % SCREENSHOTS.length) + 1}`}
-                className="w-full h-full object-cover object-top"
-                loading="lazy"
-              />
+              {/* Clip top ~8% to remove phone status bar, keep all data */}
+              <div style={{ clipPath: 'inset(8% 0 0 0)', height: '100%' }}>
+                <img
+                  src={src}
+                  alt={`social proof ${(i % SCREENSHOTS.length) + 1}`}
+                  className="w-full h-full"
+                  style={{ objectFit: 'contain', objectPosition: 'top center' }}
+                  loading="lazy"
+                />
+              </div>
             </div>
           ))}
         </div>

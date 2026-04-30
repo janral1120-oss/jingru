@@ -54,7 +54,7 @@ function cardVariants(i: number) {
 }
 
 function FlipCard({ sector, index }: { sector: CoreSector; index: number }) {
-  const [flipped, setFlipped] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const Icon = ICON_MAP[sector.icon] ?? Sparkles;
 
   return (
@@ -63,76 +63,80 @@ function FlipCard({ sector, index }: { sector: CoreSector; index: number }) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
-      onClick={() => setFlipped(f => !f)}
-      className="cursor-pointer select-none"
-      style={{
-        perspective: '1200px',
-        minHeight: index === 1 || index === 2 ? '340px' : '220px',
-      }}
+      className="select-none"
+      style={{ minHeight: 180 }}
     >
-      <motion.div
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full h-full"
-        style={{ transformStyle: 'preserve-3d' }}
+      <div
+        className={[
+          'rounded-2xl border bg-card/70 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-[0_6px_28px_rgba(230,161,87,0.16)]',
+          expanded ? 'border-primary/60' : 'border-border/70 hover:border-primary/40',
+        ].join(' ')}
       >
-        {/* FRONT */}
-        <div
-          className="absolute inset-0 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-sm overflow-hidden flex flex-col hover:border-primary/50 hover:shadow-[0_8px_32px_rgba(230,161,87,0.18)] transition-shadow"
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          {/* grain */}
-          <div className="absolute inset-0 opacity-[0.10] mix-blend-overlay pointer-events-none"
-            style={{ backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"160\\" height=\\"160\\"><filter id=\\"n\\"><feTurbulence type=\\"fractalNoise\\" baseFrequency=\\"0.85\\" numOctaves=\\"2\\"/></filter><rect width=\\"100%\\" height=\\"100%\\" filter=\\"url(%23n)\\" opacity=\\"0.7\\"/></svg>")' }} />
-          <div className="absolute left-0 top-6 bottom-6 w-[3px] rounded-r-full bg-primary/60" />
-          <div className="absolute top-4 right-4 font-mono text-[9px] tracking-[0.22em] text-muted-foreground/50">
+        {/* Card front — always visible */}
+        <div className="relative px-5 pt-5 pb-4">
+          <div className="absolute left-0 top-5 bottom-5 w-[3px] rounded-r-full bg-primary/55" />
+          <div className="absolute top-4 right-4 font-mono text-[9px] tracking-[0.2em] text-muted-foreground/45">
             № {String(index + 1).padStart(2, '0')}
           </div>
-          <div className="absolute bottom-4 right-4 font-mono text-[8px] tracking-[0.16em] text-muted-foreground/35 uppercase">
-            hover · 查看故事
+
+          <div className="flex items-start gap-3 mb-3">
+            <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center">
+              <Icon className="w-4.5 h-4.5 text-primary" strokeWidth={1.6} />
+            </div>
+            <div className="flex-1 min-w-0 pr-6">
+              <h3 className="font-serif text-sm md:text-base text-foreground leading-tight tracking-tight">
+                {sector.title}
+              </h3>
+              <p className="mt-1 text-[11px] text-muted-foreground/75 leading-relaxed line-clamp-2">
+                {sector.caption}
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col h-full px-6 pt-6 pb-10">
-            <div className="mb-3 w-10 h-10 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center flex-shrink-0">
-              <Icon className="w-5 h-5 text-primary" strokeWidth={1.6} />
-            </div>
-            <h3 className="font-serif text-base md:text-lg text-foreground leading-tight tracking-tight">
-              {sector.title}
-            </h3>
-            <p className="mt-2 text-[12px] text-muted-foreground leading-relaxed flex-1 line-clamp-4">
-              {sector.caption}
-            </p>
-            <div className="mt-3 pt-3 border-t border-dashed border-border/55 flex items-center justify-between flex-shrink-0">
-              <span className="text-[8px] tracking-[0.22em] text-muted-foreground/55 font-mono uppercase">Signature</span>
-              <span className="font-mono text-sm font-bold text-primary">{sector.metric}</span>
-            </div>
+
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-xs font-bold text-primary">{sector.metric}</span>
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono tracking-[0.18em] uppercase transition-all duration-200"
+              style={{
+                background: expanded ? 'rgba(230,161,87,0.2)' : 'rgba(230,161,87,0.08)',
+                color: expanded ? '#e6a157' : 'rgba(230,161,87,0.6)',
+                border: '1px solid',
+                borderColor: expanded ? 'rgba(230,161,87,0.5)' : 'rgba(230,161,87,0.2)',
+              }}
+            >
+              {expanded ? '收起' : '策划故事'}
+              <motion.span
+                animate={{ rotate: expanded ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+                style={{ display: 'inline-block', lineHeight: 1 }}
+              >
+                ▾
+              </motion.span>
+            </button>
           </div>
         </div>
 
-        {/* BACK */}
-        <div
-          className="absolute inset-0 rounded-2xl border border-primary/60 bg-card overflow-hidden flex flex-col"
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/12 via-transparent to-secondary/8 pointer-events-none" />
-          <div className="relative z-10 flex flex-col h-full px-6 pt-6 pb-6">
-            <div className="flex items-center gap-3 mb-4 flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center">
-                <Icon className="w-4 h-4 text-primary" strokeWidth={1.6} />
+        {/* Expandable story section */}
+        <AnimatePresence initial={false}>
+          {expanded && (
+            <motion.div
+              key="story"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              style={{ overflow: 'hidden' }}
+            >
+              <div className="px-5 pb-5 pt-1 border-t border-primary/15 bg-gradient-to-b from-primary/5 to-transparent">
+                <p className="text-[12px] text-foreground/85 leading-relaxed font-serif italic mt-3">
+                  "{sector.story}"
+                </p>
               </div>
-              <span className="font-mono text-[9px] tracking-[0.22em] uppercase text-primary/80">策划故事</span>
-            </div>
-            <p className="text-foreground/95 text-[13px] md:text-sm leading-relaxed flex-1 font-serif italic">
-              "{sector.story}"
-            </p>
-            <div className="mt-4 pt-3 border-t border-primary/20 flex items-center justify-between flex-shrink-0">
-              <span className="text-[9px] tracking-[0.22em] font-mono uppercase text-muted-foreground/60">{sector.title}</span>
-              <span className="font-mono text-sm font-bold text-primary">{sector.metric}</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
@@ -194,7 +198,7 @@ export function CoreSectors() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section id="sectors" className="relative py-28 md:py-32 overflow-hidden bg-card/20">
+    <section id="sectors" className="relative py-12 md:py-16 overflow-hidden bg-card/20">
       {/* ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[80%] max-w-4xl h-40 rounded-full bg-primary/8 blur-3xl" />

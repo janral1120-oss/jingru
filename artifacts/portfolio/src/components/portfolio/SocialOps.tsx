@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Hash } from 'lucide-react';
 import { socialOps, SocialOpsBlock } from '@/lib/portfolioData';
-import { MarqueeProof } from '@/components/portfolio/MarqueeProof';
 
 function AccordionGallery({ block }: { block: SocialOpsBlock }) {
   const [active, setActive] = useState<number | null>(null);
@@ -165,8 +164,6 @@ export function SocialOps() {
             <Block key={block.id} block={block} index={idx} />
           ))}
         </div>
-
-        <MarqueeProof />
       </div>
     </section>
   );
