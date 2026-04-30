@@ -1,170 +1,220 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
-// ─── SVG: Theater Ticket ─────────────────────────────────────────────────────
-function TheaterTicket() {
-  return (
-    <svg
-      viewBox="0 0 44 44"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-full h-full"
-    >
-      {/* Ticket body */}
-      <rect x="4" y="12" width="36" height="20" rx="2.5" strokeWidth="1.4" />
-      {/* Perforated tear line */}
-      <line x1="4" y1="22" x2="40" y2="22" strokeWidth="1" strokeDasharray="2.8 2.2" opacity="0.7" />
-      {/* Notch semi-circles (classic stub) */}
-      <path d="M4 22 a2.5 2.5 0 0 1 0-0.01" strokeWidth="0" />
-      <circle cx="4"  cy="22" r="2.6" fill="#0c0a07" stroke="currentColor" strokeWidth="1.2" />
-      <circle cx="40" cy="22" r="2.6" fill="#0c0a07" stroke="currentColor" strokeWidth="1.2" />
-      {/* Decorative text lines (top stub) */}
-      <line x1="9"  y1="16.5" x2="26" y2="16.5" strokeWidth="1.1" opacity="0.55" />
-      <line x1="9"  y1="19.5" x2="20" y2="19.5" strokeWidth="0.8" opacity="0.35" />
-      {/* Star / ornament */}
-      <circle cx="33" cy="16.5" r="1.1" fill="currentColor" opacity="0.7" />
-      {/* Bottom stub hint lines */}
-      <line x1="9"  y1="26"   x2="30" y2="26"   strokeWidth="0.9" opacity="0.35" />
-      <line x1="9"  y1="28.5" x2="22" y2="28.5" strokeWidth="0.7" opacity="0.25" />
-    </svg>
-  );
+const NAV_ITEMS = [
+  { id: 'hero',       num: '01', act: 'PROLOGUE',       label: '序幕' },
+  { id: 'sectors',    num: '02', act: 'THE ARCHIVE',    label: '核心赛道' },
+  { id: 'career',     num: '03', act: 'ACT I · LOBBY',  label: '演艺/酒旅' },
+  { id: 'skills',     num: '04', act: 'THE LAB',        label: '能力图谱' },
+  { id: 'projects',   num: '05', act: 'SHOWCASE',       label: '重点案例' },
+  { id: 'social-ops', num: '06', act: 'SOCIAL OPS',     label: '社交实验' },
+  { id: 'contact',    num: '07', act: 'BACKSTAGE',      label: '联系我' },
+] as const;
+
+type NavId = typeof NAV_ITEMS[number]['id'];
+
+function getSectionTops(): Record<NavId, number> {
+  const result: Partial<Record<NavId, number>> = {};
+  for (const item of NAV_ITEMS) {
+    const el = document.getElementById(item.id);
+    result[item.id] = el ? el.getBoundingClientRect().top + window.scrollY : 0;
+  }
+  return result as Record<NavId, number>;
 }
 
-// ─── SVG: Luggage Tag ────────────────────────────────────────────────────────
-function LuggageTag() {
-  return (
-    <svg
-      viewBox="0 0 44 44"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-full h-full"
-    >
-      {/* Tag body */}
-      <rect x="9" y="14" width="26" height="26" rx="3.5" strokeWidth="1.4" />
-      {/* Hole at top */}
-      <circle cx="22" cy="14" r="2.6" strokeWidth="1.3" />
-      {/* Loop / strap */}
-      <path d="M22 11.4 Q22 6 16.5 6 Q11 6 11 11.4" strokeWidth="1.3" />
-      {/* Hotel / name lines */}
-      <line x1="14" y1="22" x2="30" y2="22" strokeWidth="1.1" opacity="0.65" />
-      <line x1="14" y1="26" x2="28" y2="26" strokeWidth="0.9" opacity="0.45" />
-      <line x1="14" y1="30" x2="26" y2="30" strokeWidth="0.8" opacity="0.30" />
-      {/* Small leaf / logo mark */}
-      <circle cx="22" cy="35" r="1.4" fill="currentColor" opacity="0.55" />
-    </svg>
-  );
-}
+function getActive(tops: Record<NavId, number>): NavId {
+  const scrollY = window.scrollY;
+  const viewH = window.innerHeight;
+  const threshold = scrollY + viewH * 0.38;
 
-// ─── Indicator container ──────────────────────────────────────────────────────
-type Stage = 'stage' | 'resort';
+  let current: NavId = NAV_ITEMS[0].id;
+  for (const item of NAV_ITEMS) {
+    if (tops[item.id] <= threshold) {
+      current = item.id;
+    }
+  }
+  return current;
+}
 
 export function JourneyIndicator() {
-  const [stage, setStage]   = useState<Stage>('stage');
-  const [visible, setVisible] = useState(false);
+  const [activeId, setActiveId] = useState<NavId>('hero');
+  const [opacity, setOpacity] = useState(0.22);
+  const [hovering, setHovering] = useState(false);
 
-  useEffect(() => {
-    function onScroll() {
-      const career = document.getElementById('career');
-      if (!career) return;
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const topsRef = useRef<Record<NavId, number>>({} as Record<NavId, number>);
 
-      const vpH    = window.innerHeight;
-      const top    = career.offsetTop;
-      const height = career.offsetHeight;
-      const sy     = window.scrollY;
-
-      // Visibility: show when career section is within viewport
-      const inView = sy + vpH > top - 200 && sy < top + height + 200;
-      setVisible(inView);
-
-      // Stage: switch at 40% scroll through the section
-      const prog = (sy + vpH * 0.5 - top) / height;
-      setStage(prog < 0.42 ? 'stage' : 'resort');
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+  // compute section tops once layout settles, and on resize
+  const refreshTops = useCallback(() => {
+    topsRef.current = getSectionTops();
+    setActiveId(getActive(topsRef.current));
   }, []);
 
+  useEffect(() => {
+    refreshTops();
+    // slight delay for layout to stabilise
+    const t = setTimeout(refreshTops, 600);
+
+    const onScroll = () => {
+      setActiveId(getActive(topsRef.current));
+      setOpacity(1);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(() => {
+        if (!hovering) setOpacity(0.22);
+      }, 1800);
+    };
+
+    const onResize = () => refreshTops();
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      clearTimeout(t);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [refreshTops, hovering]);
+
+  const scrollTo = (id: NavId) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const activeIndex = NAV_ITEMS.findIndex(n => n.id === activeId);
+  // slider Y position: 0% (top node) to 100% (bottom node) along the line
+  const sliderPct = NAV_ITEMS.length > 1 ? (activeIndex / (NAV_ITEMS.length - 1)) * 100 : 0;
+
+  const LINE_TOP_PX  = 20;   // px gap at top before first node
+  const LINE_BOT_PX  = 20;   // px gap at bottom after last node
+  const NODE_GAP_PX  = 40;   // space between nodes
+  const totalHeight  = LINE_TOP_PX + (NAV_ITEMS.length - 1) * NODE_GAP_PX + LINE_BOT_PX;
+
   return (
-    <AnimatePresence>
-      {visible && (
+    <>
+      {/* ─── Desktop: vertical right rail ─── */}
+      <motion.nav
+        className="fixed right-4 top-1/2 -translate-y-1/2 z-[96] hidden md:flex flex-col items-center"
+        style={{ opacity, height: totalHeight }}
+        animate={{ opacity }}
+        transition={{ duration: 0.6 }}
+        onMouseEnter={() => { setHovering(true);  setOpacity(1); }}
+        onMouseLeave={() => { setHovering(false); setOpacity(0.22); }}
+        aria-label="Page navigation"
+      >
+        {/* Amber thread line */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 w-px rounded-full"
+          style={{
+            top: LINE_TOP_PX,
+            height: (NAV_ITEMS.length - 1) * NODE_GAP_PX,
+            background: 'linear-gradient(to bottom, rgba(230,161,87,0.18), rgba(230,161,87,0.45), rgba(230,161,87,0.18))',
+          }}
+        />
+
+        {/* Amber sliding cursor */}
         <motion.div
-          key="journey-indicator"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2"
-          aria-hidden="true"
-        >
-          {/* Icon box */}
-          <div className="relative w-11 h-11">
-            {/* Theater Ticket */}
-            <AnimatePresence mode="wait">
-              {stage === 'stage' ? (
-                <motion.div
-                  key="ticket"
-                  className="absolute inset-0 text-primary"
-                  initial={{ opacity: 0, rotateY: -90 }}
-                  animate={{ opacity: 1, rotateY: 0 }}
-                  exit={{ opacity: 0, rotateY: 90 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ perspective: '200px' }}
-                >
-                  <div className="w-full h-full p-0.5 rounded-lg border border-primary/40 bg-background/80 backdrop-blur-sm shadow-[0_0_14px_rgba(230,161,87,0.25)]">
-                    <TheaterTicket />
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="tag"
-                  className="absolute inset-0 text-primary"
-                  initial={{ opacity: 0, rotateY: -90 }}
-                  animate={{ opacity: 1, rotateY: 0 }}
-                  exit={{ opacity: 0, rotateY: 90 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ perspective: '200px' }}
-                >
-                  <div className="w-full h-full p-0.5 rounded-lg border border-primary/40 bg-background/80 backdrop-blur-sm shadow-[0_0_14px_rgba(230,161,87,0.25)]">
-                    <LuggageTag />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full z-10"
+          style={{
+            top: LINE_TOP_PX - 5,
+            background: '#e6a157',
+            boxShadow: '0 0 8px rgba(230,161,87,0.75)',
+          }}
+          animate={{ y: sliderPct / 100 * (NAV_ITEMS.length - 1) * NODE_GAP_PX }}
+          transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+        />
 
-          {/* Vertical progress track */}
-          <div className="w-px h-10 bg-border/40 rounded-full overflow-hidden">
-            <motion.div
-              className="w-full bg-primary rounded-full"
-              animate={{ height: stage === 'stage' ? '35%' : '100%' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </div>
+        {/* Nodes + labels */}
+        {NAV_ITEMS.map((item, i) => {
+          const isActive = item.id === activeId;
+          return (
+            <motion.button
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className="absolute flex items-center group focus:outline-none"
+              style={{ top: LINE_TOP_PX + i * NODE_GAP_PX, left: '50%', transform: 'translateX(-50%)' }}
+              whileHover={{ x: -5 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+              aria-label={`Go to ${item.act}`}
+            >
+              {/* Node dot */}
+              <motion.div
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all duration-300"
+                animate={{
+                  scale: isActive ? 1.5 : 1,
+                  background: isActive ? '#e6a157' : 'rgba(230,161,87,0.35)',
+                  boxShadow: isActive ? '0 0 6px rgba(230,161,87,0.7)' : 'none',
+                }}
+                transition={{ duration: 0.3 }}
+              />
 
-          {/* Label */}
-          <div className="flex flex-col items-center gap-0.5">
-            <span
-              className="font-mono text-[8px] tracking-[0.22em] uppercase transition-colors duration-500"
-              style={{ color: stage === 'stage' ? 'rgba(230,161,87,0.85)' : 'rgba(230,161,87,0.45)' }}
-            >
-              舞台
-            </span>
-            <span className="w-px h-3 bg-border/30" />
-            <span
-              className="font-mono text-[8px] tracking-[0.22em] uppercase transition-colors duration-500"
-              style={{ color: stage === 'resort' ? 'rgba(230,161,87,0.85)' : 'rgba(230,161,87,0.45)' }}
-            >
-              酒旅
-            </span>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              {/* Label — appears to the left, right-aligned */}
+              <div
+                className="absolute right-4 flex flex-col items-end pointer-events-none"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                <span
+                  className="font-mono text-[7px] tracking-[0.28em] uppercase transition-all duration-300"
+                  style={{ color: isActive ? 'rgba(230,161,87,0.9)' : 'rgba(245,240,232,0.28)', letterSpacing: '0.28em' }}
+                >
+                  {item.num} {item.act}
+                </span>
+                <motion.span
+                  className="font-mono text-[8px] tracking-widest transition-all duration-300"
+                  style={{ color: isActive ? 'rgba(230,161,87,0.55)' : 'rgba(245,240,232,0.15)' }}
+                  animate={{ filter: isActive ? 'drop-shadow(0 0 4px rgba(230,161,87,0.45))' : 'none' }}
+                >
+                  {item.label}
+                </motion.span>
+              </div>
+            </motion.button>
+          );
+        })}
+      </motion.nav>
+
+      {/* ─── Mobile: bottom horizontal bar ─── */}
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-[96] md:hidden"
+        style={{
+          background: 'rgba(12,10,7,0.88)',
+          backdropFilter: 'blur(12px)',
+          borderTop: '1px solid rgba(230,161,87,0.15)',
+        }}
+      >
+        <div className="flex overflow-x-auto scrollbar-hide">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.id === activeId;
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className="flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 focus:outline-none transition-all duration-300"
+                style={{ minWidth: '4.5rem' }}
+              >
+                <span
+                  className="font-mono text-[7px] tracking-[0.22em]"
+                  style={{ color: isActive ? 'rgba(230,161,87,0.9)' : 'rgba(245,240,232,0.3)' }}
+                >
+                  {item.num}
+                </span>
+                <span
+                  className="font-mono text-[8px] tracking-wide"
+                  style={{ color: isActive ? 'rgba(230,161,87,0.75)' : 'rgba(245,240,232,0.22)' }}
+                >
+                  {item.label}
+                </span>
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-indicator"
+                    className="w-4 h-px rounded-full"
+                    style={{ background: '#e6a157', boxShadow: '0 0 4px rgba(230,161,87,0.7)' }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }

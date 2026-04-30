@@ -76,12 +76,32 @@ export function Contact() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
+        {/* Handwriting accent */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-4 select-none"
+          style={{
+            fontFamily: "'Caveat', cursive",
+            fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
+            fontWeight: 400,
+            color: 'rgba(180,120,45,0.65)',
+            transform: 'rotate(-1.5deg)',
+            display: 'inline-block',
+            letterSpacing: '0.02em',
+          }}
+        >
+          Crafting the next great experience.
+        </motion.p>
+
         {/* main headline */}
         <motion.h2
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
           className="text-4xl md:text-6xl font-serif font-bold text-foreground leading-tight tracking-tight mb-5"
         >
           感谢你看到这里，<br />

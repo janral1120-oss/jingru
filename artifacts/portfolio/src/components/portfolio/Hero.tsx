@@ -25,7 +25,7 @@ export function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center pt-20 pb-12 overflow-hidden">
+    <section id="hero" className="relative min-h-[90vh] flex flex-col justify-center pt-20 pb-12 overflow-hidden">
       {/* 3D particle sphere — sits in background, tracks mouse */}
       <ParticleSphere className="z-0" />
       {/* Soft radial gradient so sphere blends into the dark bg */}
